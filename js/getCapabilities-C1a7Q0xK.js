@@ -1,0 +1,1 @@
+import{t as e}from"./getCapabilities-B-vUPiVL.js";import{t as c}from"./getConnectorClient-EJQ39LHV.js";async function p(a,i={}){const{account:t,chainId:n,connector:o}=i;return e(await c(a,{account:t,connector:o}),{account:t,chainId:n})}export{p as t};

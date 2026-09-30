@@ -1,0 +1,1 @@
+import{s as a}from"./addresses-B2CqG4CA.js";import{d,h as t,u as i}from"./currencyId-BdvFgu1C.js";import{t as e}from"./tokens-B8T4NWoO.js";function o(r,n){return`${r}-${a(n)}`}function f(r){return o(r.chainId,r.isToken?r.address:e)}function y(r){const n=d(r);if(!n)return;const s=i(r);return o(n,t(n,s)?e:s)}export{f as n,y as r,o as t};

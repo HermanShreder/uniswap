@@ -1,0 +1,1 @@
+import{s as a}from"./rolldown-runtime-Bpprpzce.js";import{t as i}from"./react-D7hXOYnT.js";import{t as c}from"./useConfig-D1VYOsWX.js";function o(t){return t.state.chainId}function s(t,n){const{onChange:r}=n;return t.subscribe(e=>e.chainId,r)}var u=a(i(),1);function d(t={}){const n=c(t);return(0,u.useSyncExternalStore)(r=>s(n,{onChange:r}),()=>o(n),()=>o(n))}export{d as t};

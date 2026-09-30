@@ -1,0 +1,1 @@
+import{r as m}from"./_esm-4Wf01rIq.js";function a(t,r={}){const{key:e="custom",methods:o,name:s="Custom Provider",retryDelay:u}=r;return({retryCount:n})=>m({key:e,methods:o,name:s,request:t.request.bind(t),retryCount:r.retryCount??n,retryDelay:u,type:"custom"})}export{a as t};

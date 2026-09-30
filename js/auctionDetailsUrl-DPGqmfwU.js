@@ -1,0 +1,1 @@
+import{a as e,x as i}from"./addresses-B2CqG4CA.js";import{o}from"./chains-DKT0c_8J.js";import{g as a}from"./utils-Bh37PYsS.js";import{r as m}from"./chainParams-CnT1Pv-T.js";function u({chainId:r,auctionAddress:t}){if(!a(r)||!i(r))return;const s=e({address:t,chainId:r});if(!(!s||!o(s)))return`/explore/auctions/${m(r)}/${s}`}export{u as t};

@@ -1,0 +1,1 @@
+import{t as i}from"./connect-transport-DAxrK19r.js";var o="ALL_NETWORKS",l=(a,e={})=>i({baseUrl:a.baseUrl,interceptors:a.additionalHeaders?[s=>r=>(a.additionalHeaders&&new Headers(a.additionalHeaders).forEach((t,d)=>{r.header.set(d,t)}),s(r))]:[],...e});export{l as n,o as t};

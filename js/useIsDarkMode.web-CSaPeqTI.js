@@ -1,0 +1,1 @@
+import{s as r}from"./rolldown-runtime-Bpprpzce.js";import{t as e}from"./react-D7hXOYnT.js";import{n as t,r as o,t as a}from"./theme-state-93S6o1MF.js";var s=r(e());function p(){return(0,s.useSyncExternalStore)(o,a,t)==="dark"}export{p as t};

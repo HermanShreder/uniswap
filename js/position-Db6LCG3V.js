@@ -1,0 +1,1 @@
+function t(i){if(i===void 0)return{side:"bottom",align:"center"};const[s,n]=i.split("-");return{side:s,align:n??"center"}}function e({offset:i,align:s}){if(i===void 0)return{sideOffset:0,alignOffset:0};if(typeof i=="number")return{sideOffset:i,alignOffset:0};const n=i.crossAxis??0;return{sideOffset:i.mainAxis??0,alignOffset:s==="end"?-n:n}}export{t as n,e as t};

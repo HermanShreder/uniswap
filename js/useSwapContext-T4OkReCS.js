@@ -1,0 +1,1 @@
+import{s as r}from"./rolldown-runtime-Bpprpzce.js";import{t as e}from"./react-D7hXOYnT.js";import{t as a}from"./interface-DpEdQift.js";var t=r(e()),o=(0,t.createContext)({currencyState:{inputCurrency:void 0,outputCurrency:void 0},setCurrencyState:()=>{},currentTab:a.Swap,setCurrentTab:()=>{}});function p(){return(0,t.useContext)(o)}export{o as n,p as t};

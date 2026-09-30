@@ -1,0 +1,1 @@
+import{t as o}from"./useSporeColors.web-BGqpk4Q8.js";function l(){const r=o();return{"&::WebkitScrollbar":{backgroundColor:"transparent"},"&::WebkitScrollbarThumb":{backgroundColor:r.surface3.val,borderRadius:"8px"},scrollbarWidth:"thin",scrollbarColor:`${r.surface3.val} transparent`,overscrollBehavior:"contain"}}export{l as t};

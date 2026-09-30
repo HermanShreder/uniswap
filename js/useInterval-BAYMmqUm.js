@@ -1,0 +1,1 @@
+import{s as m}from"./rolldown-runtime-Bpprpzce.js";import{t as n}from"./react-D7hXOYnT.js";var c=m(n());function _(r,t,e=!0){(0,c.useEffect)(()=>{if(t===null)return;let i;return o(t,!e),()=>{clearTimeout(i)};async function o(u,f=!1){if(!f){const s=r();s&&await s}i=setTimeout(()=>o(u),u)}},[r,t,e])}export{_ as t};

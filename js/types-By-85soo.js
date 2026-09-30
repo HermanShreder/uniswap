@@ -1,0 +1,1 @@
+import{u as a}from"./transactionDetails-DVaFdeh0.js";function t(n){return n.type===a.OnRampPurchase}function o(n){return n.type===a.OffRampSale}function r(n){return n.type===a.Receive}function i(n){return n.type===a.Send}function s(n){return n.type===a.Unknown}export{s as a,i,t as n,r,o as t};

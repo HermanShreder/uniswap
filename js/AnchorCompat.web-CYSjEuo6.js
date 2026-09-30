@@ -1,0 +1,1 @@
+import{s as o}from"./rolldown-runtime-Bpprpzce.js";import{t as m}from"./react-D7hXOYnT.js";import{t as a}from"./jsx-runtime-DXSXxcGM.js";import{t as i}from"./TextCompat.web-BRDKgJy1.js";import{o as e}from"./primitive-marker-DKef8-j4.js";var p=o(m()),s=a(),f=p.forwardRef(function(r,t){return(0,s.jsx)(i,{role:"link",...r,tag:r.tag??"a",ref:t})});e(f);export{f as t};

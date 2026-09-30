@@ -1,0 +1,1 @@
+import{t as i}from"./jsx-runtime-DXSXxcGM.js";import{t as o}from"./I18nManager-CaFiE76j.js";import{t as m}from"./ArrowLeft-CdXSkhmJ.js";import{t as s}from"./ArrowRight-CHgoB8UQ.js";var t=i();function u(r){return o.isRTL?(0,t.jsx)(s,{size:"$icon.24",...r}):(0,t.jsx)(m,{size:"$icon.24",...r})}export{u as t};

@@ -1,0 +1,1 @@
+import{o as r}from"./urls-BF7yEhrI.js";import{n as e}from"./base-BimdPEaF.js";import{t as i}from"./config-D5tTnKCR.js";var s=e({baseUrl:r(i).liquidityServiceUrl,additionalHeaders:{"x-api-key":i.tradingApiKey}},{jsonOptions:{emitDefaultValues:!0}});export{s as t};

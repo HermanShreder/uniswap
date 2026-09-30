@@ -1,0 +1,1 @@
+import{s as t}from"./rolldown-runtime-Bpprpzce.js";import{t as i}from"./react-D7hXOYnT.js";import{i as e}from"./svm-CjcVH7BK.js";var a=t(i()),s=(0,a.createContext)({reset:()=>{},setSelectedChainId:()=>{},isUserSelectedToken:!1,setIsUserSelectedToken:()=>{},chainId:e.Mainnet,initialChainId:e.Mainnet,isMultichainContext:!1});export{s as t};

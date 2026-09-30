@@ -1,0 +1,1 @@
+var a=e=>e===null||typeof e!="object"?!1:Object.values(e).every(r=>{if(r===null||typeof r!="object")return!1;const{light:t,dark:s}=r;return(t===void 0||typeof t=="string")&&(s===void 0||typeof s=="string")}),n=e=>Array.isArray(e)&&e.every(r=>typeof r=="number");export{n,a as t};
