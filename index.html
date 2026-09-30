@@ -1,847 +1,1618 @@
-<!DOCTYPE html><html translate="no"><head>
-    <meta charset="utf-8">
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
 
-    <title>Uniswap Interface</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
 
-    <!-- Vite uses / for public assets instead of %PUBLIC_URL% -->
-    <link rel="shortcut icon" type="image/png" href="images/favicon.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="images/192x192_App_Icon.png">
-    <link rel="apple-touch-icon" sizes="512x512" href="images/512x512_App_Icon.png">
+  <meta name="theme-color" content="#0b0b0f">
+  <meta name="color-scheme" content="dark">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#fff">
-    <meta name="format-detection" content="telephone=no">
+  <title>Uniswap Interface</title>
 
-    
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin="">
-    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin="">
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+    }
 
-    <link rel="preload" href="fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin="">
-    <link rel="preload" href="fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin="">
-    
-    <!-- Cloudflare Turnstile script - loaded early for CSP compliance -->
-    <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin="">
-    <script id="cf-turnstile-script" src="js/api.js" defer=""></script>
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          900px 500px at 50% -100px,
+          rgba(255, 0, 122, 0.13),
+          transparent 65%
+        ),
+        #0b0b0f;
 
-    <style>
-      * {
-        font-family: 'Basel', sans-serif;
-        box-sizing: border-box;
+      color: #fff;
+
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+
+      width: 100%;
+      height: 72px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 28px;
+
+      border-bottom: 1px solid rgba(255,255,255,.06);
+
+      background: rgba(11,11,15,.82);
+
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+
+      background: linear-gradient(
+        145deg,
+        #ff007a,
+        #ff4da6
+      );
+
+      box-shadow:
+        0 5px 25px rgba(255,0,122,.28);
+    }
+
+    .brand-logo svg {
+      width: 23px;
+      height: 23px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav a {
+      color: #aaa;
+      font-size: 15px;
+      font-weight: 600;
+
+      transition: color .2s ease;
+    }
+
+    .nav a:hover {
+      color: #fff;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-button {
+      width: 42px;
+      height: 42px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 14px;
+
+      color: #aaa;
+
+      background: rgba(255,255,255,.05);
+
+      transition:
+        background .2s ease,
+        color .2s ease;
+    }
+
+    .icon-button:hover {
+      color: #fff;
+      background: rgba(255,255,255,.09);
+    }
+
+    .connect-header {
+      height: 42px;
+
+      padding: 0 17px;
+
+      border-radius: 14px;
+
+      color: #fff;
+
+      background: #ff007a;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      transition:
+        transform .15s ease,
+        background .2s ease;
+    }
+
+    .connect-header:hover {
+      background: #ff2990;
+    }
+
+    .connect-header:active {
+      transform: scale(.97);
+    }
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    .page {
+      width: 100%;
+      min-height: calc(100vh - 72px);
+
+      display: flex;
+      justify-content: center;
+
+      padding: 65px 20px 100px;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    /* =========================
+       TABS
+    ========================= */
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 24px;
+
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      position: relative;
+
+      padding: 8px 4px;
+
+      color: #777;
+
+      background: transparent;
+
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .tab.active {
+      color: #fff;
+    }
+
+    .tab.active::after {
+      content: "";
+
+      position: absolute;
+
+      left: 0;
+      right: 0;
+      bottom: -5px;
+
+      height: 2px;
+
+      border-radius: 10px;
+
+      background: #ff007a;
+    }
+
+    /* =========================
+       SWAP CARD
+    ========================= */
+
+    .swap-card {
+      position: relative;
+
+      padding: 14px;
+
+      border: 1px solid rgba(255,255,255,.07);
+
+      border-radius: 28px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(30,30,37,.96),
+          rgba(19,19,24,.98)
+        );
+
+      box-shadow:
+        0 30px 100px rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.035);
+    }
+
+    .input-box {
+      padding: 17px;
+
+      border-radius: 21px;
+
+      background: #121217;
+
+      border: 1px solid transparent;
+
+      transition:
+        border-color .2s ease,
+        background .2s ease;
+    }
+
+    .input-box:focus-within {
+      border-color: rgba(255,255,255,.09);
+      background: #141419;
+    }
+
+    .input-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 13px;
+    }
+
+    .input-label {
+      color: #8c8c96;
+
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .balance {
+      color: #666;
+
+      font-size: 12px;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 10px;
+    }
+
+    .amount {
+      width: 100%;
+
+      border: 0;
+      outline: 0;
+
+      background: transparent;
+
+      color: #fff;
+
+      font-size: 35px;
+      font-weight: 500;
+
+      letter-spacing: -1.5px;
+    }
+
+    .amount::placeholder {
+      color: #4d4d54;
+    }
+
+    .token-button {
+      flex-shrink: 0;
+
+      min-width: 118px;
+      height: 52px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 10px;
+
+      padding: 0 13px;
+
+      border-radius: 18px;
+
+      color: #fff;
+
+      background: #27272f;
+
+      font-size: 16px;
+      font-weight: 700;
+
+      transition: background .2s ease;
+    }
+
+    .token-button:hover {
+      background: #303039;
+    }
+
+    .token-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .token-icon {
+      width: 30px;
+      height: 30px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+
+      background:
+        linear-gradient(
+          145deg,
+          #627eea,
+          #3448a8
+        );
+
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .token-icon.usdc {
+      background:
+        linear-gradient(
+          145deg,
+          #2775ca,
+          #174c8c
+        );
+    }
+
+    .token-arrow {
+      color: #999;
+      font-size: 13px;
+    }
+
+    /* =========================
+       SWAP ARROW
+    ========================= */
+
+    .switch-wrap {
+      position: relative;
+
+      height: 0;
+
+      z-index: 5;
+    }
+
+    .switch-button {
+      position: absolute;
+
+      left: 50%;
+      top: -1px;
+
+      transform: translate(-50%, -50%);
+
+      width: 42px;
+      height: 42px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 4px solid #131318;
+
+      border-radius: 14px;
+
+      color: #fff;
+
+      background: #28282f;
+
+      box-shadow:
+        0 5px 20px rgba(0,0,0,.35);
+
+      transition:
+        transform .2s ease,
+        background .2s ease;
+    }
+
+    .switch-button:hover {
+      background: #35353d;
+
+      transform:
+        translate(-50%, -50%)
+        rotate(180deg);
+    }
+
+    .switch-button svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* =========================
+       SETTINGS
+    ========================= */
+
+    .settings {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 14px 6px 6px;
+    }
+
+    .slippage {
+      color: #85858e;
+      font-size: 12px;
+    }
+
+    .slippage strong {
+      color: #ddd;
+    }
+
+    .settings-button {
+      width: 34px;
+      height: 34px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 12px;
+
+      color: #999;
+
+      background: transparent;
+    }
+
+    .settings-button:hover {
+      color: #fff;
+      background: rgba(255,255,255,.06);
+    }
+
+    /* =========================
+       ACTION
+    ========================= */
+
+    .main-action {
+      width: 100%;
+      height: 64px;
+
+      margin-top: 9px;
+
+      border-radius: 20px;
+
+      color: #fff;
+
+      background: #ff007a;
+
+      font-size: 18px;
+      font-weight: 700;
+
+      box-shadow:
+        0 10px 35px rgba(255,0,122,.15);
+
+      transition:
+        transform .15s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+    }
+
+    .main-action:hover {
+      background: #ff218d;
+
+      box-shadow:
+        0 12px 42px rgba(255,0,122,.22);
+    }
+
+    .main-action:active {
+      transform: scale(.985);
+    }
+
+    /* =========================
+       INFO
+    ========================= */
+
+    .info {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+
+      gap: 8px;
+
+      margin-top: 12px;
+    }
+
+    .info-item {
+      padding: 13px 8px;
+
+      text-align: center;
+
+      border-radius: 16px;
+
+      background: rgba(255,255,255,.035);
+    }
+
+    .info-title {
+      color: #666;
+
+      font-size: 10px;
+      font-weight: 600;
+
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .info-value {
+      margin-top: 4px;
+
+      color: #ddd;
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 18px;
+
+      margin-top: 32px;
+
+      color: #666;
+
+      font-size: 12px;
+    }
+
+    .footer a:hover {
+      color: #aaa;
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .overlay {
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 999;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+
+      background: rgba(0,0,0,.65);
+
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 420px;
+
+      padding: 22px;
+
+      border: 1px solid rgba(255,255,255,.08);
+
+      border-radius: 25px;
+
+      background: #18181e;
+
+      box-shadow:
+        0 30px 100px rgba(0,0,0,.6);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .close {
+      width: 36px;
+      height: 36px;
+
+      border-radius: 12px;
+
+      color: #aaa;
+
+      background: rgba(255,255,255,.05);
+    }
+
+    .close:hover {
+      color: #fff;
+      background: rgba(255,255,255,.09);
+    }
+
+    .wallet-option {
+      width: 100%;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 15px;
+
+      margin-bottom: 9px;
+
+      border-radius: 17px;
+
+      color: #fff;
+
+      background: #222229;
+
+      transition: background .2s ease;
+    }
+
+    .wallet-option:hover {
+      background: #2b2b33;
+    }
+
+    .wallet-name {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .wallet-logo {
+      width: 38px;
+      height: 38px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 12px;
+
+      background: #fff;
+
+      color: #111;
+
+      font-weight: 800;
+    }
+
+    .wallet-status {
+      color: #777;
+      font-size: 12px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 768px) {
+
+      .header {
+        height: 62px;
+
+        padding: 0 14px;
       }
 
-      /**
-        Explicitly load Basel var from public/ so it does not block LCP's critical path.
-      */
-      @font-face {
-        font-family: 'Basel';
-        font-weight: 535;
-        font-style: normal;
-        font-display: block;
-        src: 
-          url('fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
-          url('fonts/Basel-Grotesk-Medium.woff') format('woff');
+      .brand {
+        font-size: 17px;
       }
 
-      @font-face {
-        font-family: 'Basel';
-        font-weight: 485;
-        font-style: normal;
-        font-display: block;
-        src: 
-          url('fonts/Basel-Grotesk-Book.woff2') format('woff2'),
-          url('fonts/Basel-Grotesk-Book.woff') format('woff');
+      .brand-logo {
+        width: 30px;
+        height: 30px;
       }
 
-      /* Subsetted Inter Regular, fetched lazily only when the Privy watermark renders (PrivyWatermark.tsx). */
-      @font-face {
-        font-family: 'Inter';
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-        unicode-range: U+0020-007E, U+00A0-024F, U+1E00-1EFF;
-        src: url('fonts/Inter-Regular-Latin.woff2') format('woff2');
+      .nav {
+        display: none;
       }
 
-      @supports (font-variation-settings: normal) {
-        * {
-          font-family: 'Basel', sans-serif;
-        }
+      .header-actions {
+        gap: 7px;
       }
 
-      html,
-      body {
-        margin: 0;
-        padding: 0;
+      .icon-button {
+        width: 38px;
+        height: 38px;
       }
 
-      /* Only apply overflow-x: hidden on desktop */
-      @media (min-width: 768px) {
-        html {
-          overflow-x: hidden;
-        }
+      .connect-header {
+        height: 38px;
+        padding: 0 13px;
       }
 
-      button {
-        user-select: none;
+      .page {
+        min-height: calc(100vh - 62px);
+
+        padding:
+          35px 12px
+          calc(40px + env(safe-area-inset-bottom));
       }
 
-      html {
-        font-size: 16px;
-        font-weight: 485;
-        font-variant: none;
-        font-smooth: always;
-        text-rendering: optimizeLegibility !important;
-        -webkit-font-smoothing: antialiased !important;
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      .content {
+        max-width: 100%;
       }
 
-      html,
-      body,
-      #root {
-        min-height: 100%;
+      .swap-card {
+        padding: 10px;
+
+        border-radius: 23px;
       }
 
-      @media (prefers-color-scheme: dark) {
-        html {
-          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
-        }
+      .input-box {
+        padding: 15px;
+
+        border-radius: 18px;
       }
 
-      @media (prefers-color-scheme: light) {
-        html {
-          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
-        }
+      .amount {
+        font-size: 29px;
       }
-    </style>
-    <script type="module" src="js/index-CT67zBfr.js"></script>
-    <link rel="modulepreload" crossorigin="" href="js/rolldown-runtime-Bpprpzce.js">
-    <link rel="modulepreload" crossorigin="" href="js/dist-BeEXv2Nx.js">
-    <link rel="modulepreload" crossorigin="" href="js/coerce-B46BSzgG.js">
-    <link rel="modulepreload" crossorigin="" href="js/env.web-DhefQKid.js">
-    <link rel="modulepreload" crossorigin="" href="js/dist-COlqVmP8.js">
-    <link rel="modulepreload" crossorigin="" href="js/proto3-CZsCbJxx.js">
-    <link rel="modulepreload" crossorigin="" href="js/timestamp_pb-C0LRQrzF.js">
-    <link rel="modulepreload" crossorigin="" href="js/to-plain-message-9laDNu02.js">
-    <link rel="modulepreload" crossorigin="" href="js/connect-error-BrhVh-ns.js">
-    <link rel="modulepreload" crossorigin="" href="js/connect-transport-DAxrK19r.js">
-    <link rel="modulepreload" crossorigin="" href="js/promise-client-BYYCPz5y.js">
-    <link rel="modulepreload" crossorigin="" href="js/provideSessionStorage-DDatM1qY.js">
-    <link rel="modulepreload" crossorigin="" href="js/query-DVyDm-nE.js">
-    <link rel="modulepreload" crossorigin="" href="js/hashKey-BfxtVoED.js">
-    <link rel="modulepreload" crossorigin="" href="js/cache-BIPVTHfg.js">
-    <link rel="modulepreload" crossorigin="" href="js/time-DRugyzC6.js">
-    <link rel="modulepreload" crossorigin="" href="js/provideSession-CmAzPZ3a.js">
-    <link rel="modulepreload" crossorigin="" href="js/esm-YLUarnFf.js">
-    <link rel="modulepreload" crossorigin="" href="js/replayStats-B17svr5s.js">
-    <link rel="modulepreload" crossorigin="" href="js/preload-helper-CZTyufbU.js">
-    <link rel="modulepreload" crossorigin="" href="js/logger-qPc3g3Gw.js">
-    <link rel="modulepreload" crossorigin="" href="js/getVersionHeader.web-CmpoA_XI.js">
-    <link rel="modulepreload" crossorigin="" href="js/provideSessionService.web-BuPQ8wuS.js">
-    <link rel="modulepreload" crossorigin="" href="js/react-D7hXOYnT.js">
-    <link rel="modulepreload" crossorigin="" href="js/jsx-runtime-DXSXxcGM.js">
-    <link rel="modulepreload" crossorigin="" href="js/useQuery-rcmdX6_n.js">
-    <link rel="modulepreload" crossorigin="" href="js/useMutation-UsTLeEEz.js">
-    <link rel="modulepreload" crossorigin="" href="js/useQueries-glmZJv-_.js">
-    <link rel="modulepreload" crossorigin="" href="js/timing-B2NiXxzg.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-D4giHDj5.js">
-    <link rel="modulepreload" crossorigin="" href="js/getEntryGatewayUrl-uWrOKvWQ.js">
-    <link rel="modulepreload" crossorigin="" href="js/dist-DzwoQ24k.js">
-    <link rel="modulepreload" crossorigin="" href="js/svm-CjcVH7BK.js">
-    <link rel="modulepreload" crossorigin="" href="js/addresses-B2CqG4CA.js">
-    <link rel="modulepreload" crossorigin="" href="js/urls-BF7yEhrI.js">
-    <link rel="modulepreload" crossorigin="" href="js/element-14IUaLlF.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-BiTjT_b4.js">
-    <link rel="modulepreload" crossorigin="" href="js/getCallError-CZhyThxO.js">
-    <link rel="modulepreload" crossorigin="" href="js/sha2-KSBN9is1.js">
-    <link rel="modulepreload" crossorigin="" href="js/defineChain-BZUi60Ug.js">
-    <link rel="modulepreload" crossorigin="" href="js/account-k15l90C6.js">
-    <link rel="modulepreload" crossorigin="" href="js/polygon-kVHxE4QI.js">
-    <link rel="modulepreload" crossorigin="" href="js/configs-CnQl1qq9.js">
-    <link rel="modulepreload" crossorigin="" href="js/assets-C3iD9jmn.js">
-    <link rel="modulepreload" crossorigin="" href="js/config-D5tTnKCR.js">
-    <link rel="modulepreload" crossorigin="" href="js/chainInfo-D3Gra5tg.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-DfBwvjf9.js">
-    <link rel="modulepreload" crossorigin="" href="js/misc-CEC0sWsF.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-Bh37PYsS.js">
-    <link rel="modulepreload" crossorigin="" href="js/tokens-DId0cXKG.js">
-    <link rel="modulepreload" crossorigin="" href="js/percent-Bi-wtETC.js">
-    <link rel="modulepreload" crossorigin="" href="js/price-B4Oc87Eo.js">
-    <link rel="modulepreload" crossorigin="" href="js/constants-lrxzqeL4.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-BvexiJl3.js">
-    <link rel="modulepreload" crossorigin="" href="js/experiments-B_xTXbUV.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-TCw7wCeC.js">
-    <link rel="modulepreload" crossorigin="" href="js/lib.esm-CFsunhT-.js">
-    <link rel="modulepreload" crossorigin="" href="js/getCurrencyAmount-DFIGlPMB.js">
-    <link rel="modulepreload" crossorigin="" href="js/currencyId-BdvFgu1C.js">
-    <link rel="modulepreload" crossorigin="" href="js/createUniswapFetchClient-CdtN3s9t.js">
-    <link rel="modulepreload" crossorigin="" href="js/currency-CN5VsqzR.js">
-    <link rel="modulepreload" crossorigin="" href="js/TradingApiClient-DfQiiq7Q.js">
-    <link rel="modulepreload" crossorigin="" href="js/hash-CSpxKqQG.js">
-    <link rel="modulepreload" crossorigin="" href="js/lib.esm-DZQMYRpU.js">
-    <link rel="modulepreload" crossorigin="" href="js/lib.esm-Bl89UzcU.js">
-    <link rel="modulepreload" crossorigin="" href="js/lib.esm-DIbELvCk.js">
-    <link rel="modulepreload" crossorigin="" href="js/lib.esm-Dax7F8t7.js">
-    <link rel="modulepreload" crossorigin="" href="js/rpcObserver-SKTwMbW3.js">
-    <link rel="modulepreload" crossorigin="" href="js/resolveRpcConfig.web-BfL6iUyw.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-WUXuGRgj.js">
-    <link rel="modulepreload" crossorigin="" href="js/TradeType-BOLx6cev.js">
-    <link rel="modulepreload" crossorigin="" href="js/JupiterFetchClient-BoAzOIy0.js">
-    <link rel="modulepreload" crossorigin="" href="js/PlanStepStatus-vr2tkkM4.js">
-    <link rel="modulepreload" crossorigin="" href="js/objectSpread2-DkWGZLeg.js">
-    <link rel="modulepreload" crossorigin="" href="js/redux-toolkit.esm-DcrLnit6.js">
-    <link rel="modulepreload" crossorigin="" href="js/extends-69on7N6B.js">
-    <link rel="modulepreload" crossorigin="" href="js/transactionDetails-DVaFdeh0.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-Dljhbhzh.js">
-    <link rel="modulepreload" crossorigin="" href="js/slice-spENbl9U.js">
-    <link rel="modulepreload" crossorigin="" href="js/with-selector-DWYybr29.js">
-    <link rel="modulepreload" crossorigin="" href="js/react-dom-DDmuhpYt.js">
-    <link rel="modulepreload" crossorigin="" href="js/es-BrXHyZ0h.js">
-    <link rel="modulepreload" crossorigin="" href="js/saga-ClSjO8pE.js">
-    <link rel="modulepreload" crossorigin="" href="js/currency-oBBsOY-G.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-BWN70XcC.js">
-    <link rel="modulepreload" crossorigin="" href="js/approve-CpOVvsZv.js">
-    <link rel="modulepreload" crossorigin="" href="js/plan_pb-Bv98e3j7.js">
-    <link rel="modulepreload" crossorigin="" href="js/createWithSessionRetry-DjnqaxCX.js">
-    <link rel="modulepreload" crossorigin="" href="js/middleware-Dkarb61v.js">
-    <link rel="modulepreload" crossorigin="" href="js/vanilla-BOxBh-Fu.js">
-    <link rel="modulepreload" crossorigin="" href="js/assets-CPhI2AzT.js">
-    <link rel="modulepreload" crossorigin="" href="js/extractPlanResponseDetails-CY06ZIyG.js">
-    <link rel="modulepreload" crossorigin="" href="js/react-Cc4Fs2iW.js">
-    <link rel="modulepreload" crossorigin="" href="js/permit2Signature-Dd_Hq5JZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/swap-BpS4m3Ju.js">
-    <link rel="modulepreload" crossorigin="" href="js/planSagaUtils-B8IYkZoe.js">
-    <link rel="modulepreload" crossorigin="" href="js/api_pb-D0lIVArE.js">
-    <link rel="modulepreload" crossorigin="" href="js/ForApiClient-BJo1TQ3e.js">
-    <link rel="modulepreload" crossorigin="" href="js/useFiatOnRampQueries-yOS4TuZE.js">
-    <link rel="modulepreload" crossorigin="" href="js/modal-Bpa7fhxa.js">
-    <link rel="modulepreload" crossorigin="" href="js/persistableQueryOptions-C304PPYt.js">
-    <link rel="modulepreload" crossorigin="" href="js/types_pb-BPmH1kki.js">
-    <link rel="modulepreload" crossorigin="" href="js/transport-CTGTqaCH.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-CNo0YdEG.js">
-    <link rel="modulepreload" crossorigin="" href="js/useTranslation-DVNP8y3L.js">
-    <link rel="modulepreload" crossorigin="" href="js/navigatorLocale-DPHo2pG9.js">
-    <link rel="modulepreload" crossorigin="" href="js/selectors-BMXACNvF.js">
-    <link rel="modulepreload" crossorigin="" href="js/__vite-browser-external-D1nPdqVr.js">
-    <link rel="modulepreload" crossorigin="" href="js/lib-DzrWArIC.js">
-    <link rel="modulepreload" crossorigin="" href="js/chunk-KS7C4IRE-DXnnZhL7.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-CowpAWsy.js">
-    <link rel="modulepreload" crossorigin="" href="js/LocalizationContext-z8KcUAGP.js">
-    <link rel="modulepreload" crossorigin="" href="js/features-D4p8vVd4.js">
-    <link rel="modulepreload" crossorigin="" href="js/analytics.web-CWcd1md3.js">
-    <link rel="modulepreload" crossorigin="" href="js/send.web-BL2fi1pz.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-Dnc5ZIRP.js">
-    <link rel="modulepreload" crossorigin="" href="js/UniswapContext-BM8EUfS_.js">
-    <link rel="modulepreload" crossorigin="" href="js/priceKeys-CNJDHVaq.js">
-    <link rel="modulepreload" crossorigin="" href="js/getDisplayedPriceSource-CrvD59UX.js">
-    <link rel="modulepreload" crossorigin="" href="js/isRemotePriceServiceSupportedChain-DFp2QhhX.js">
-    <link rel="modulepreload" crossorigin="" href="js/TraceContext-BYKdXeoI.js">
-    <link rel="modulepreload" crossorigin="" href="js/usePollingIntervalByChain-D_rCBlge.js">
-    <link rel="modulepreload" crossorigin="" href="js/useUSDCPrice-BCp_BiU6.js">
-    <link rel="modulepreload" crossorigin="" href="js/shallow-C4_guPHW.js">
-    <link rel="modulepreload" crossorigin="" href="js/wallets-COVsRDf8.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-opZnj9kf.js">
-    <link rel="modulepreload" crossorigin="" href="js/useFeatureFlaggedChainIds-CRkZTzCx.js">
-    <link rel="modulepreload" crossorigin="" href="js/useEnabledChains-CfXYrfac.js">
-    <link rel="modulepreload" crossorigin="" href="js/Trans-B_8lduXC.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-NHEdf3wT.js">
-    <link rel="modulepreload" crossorigin="" href="js/token-constants-CX59bPT1.js">
-    <link rel="modulepreload" crossorigin="" href="js/primitive-marker-DKef8-j4.js">
-    <link rel="modulepreload" crossorigin="" href="js/TextCompat.web-BRDKgJy1.js">
-    <link rel="modulepreload" crossorigin="" href="js/curves-FbJ7tOUQ.js">
-    <link rel="modulepreload" crossorigin="" href="js/TouchableAreaCompat.web-BZwEFq9q.js">
-    <link rel="modulepreload" crossorigin="" href="js/compile-D4O6sdES.js">
-    <link rel="modulepreload" crossorigin="" href="js/AnimatedFlex.web-dlQBao3v.js">
-    <link rel="modulepreload" crossorigin="" href="js/I18nManager-CaFiE76j.js">
-    <link rel="modulepreload" crossorigin="" href="js/Button-DRgmS4uo.js">
-    <link rel="modulepreload" crossorigin="" href="js/objectWithoutPropertiesLoose-n_NXDTZ5.js">
-    <link rel="modulepreload" crossorigin="" href="js/breakpoints-xjAHpMJn.js">
-    <link rel="modulepreload" crossorigin="" href="js/borderRadii-Bmb-V-QH.js">
-    <link rel="modulepreload" crossorigin="" href="js/themeState-93S6o1MF.js">
-    <link rel="modulepreload" crossorigin="" href="js/useSporeColors.web-D9j_ZhCp.js">
-    <link rel="modulepreload" crossorigin="" href="js/iconSizes-BmuMAOz2.js">
-    <link rel="modulepreload" crossorigin="" href="js/createIcon-Biqa7yHC.js">
-    <link rel="modulepreload" crossorigin="" href="js/fonts-Znb2A-Jv.js">
-    <link rel="modulepreload" crossorigin="" href="js/imageSizes-eHN9fHhR.js">
-    <link rel="modulepreload" crossorigin="" href="js/tokens-DUZ63bgy.js">
-    <link rel="modulepreload" crossorigin="" href="js/with-selector-DmWxSFnd.js">
-    <link rel="modulepreload" crossorigin="" href="js/Trace-C1QewpjQ.js">
-    <link rel="modulepreload" crossorigin="" href="js/AlertTriangleFilled-D8RvnvqF.js">
-    <link rel="modulepreload" crossorigin="" href="js/uniswap-BgrKspzS.js">
-    <link rel="modulepreload" crossorigin="" href="js/section-D-h5YUlp.js">
-    <link rel="modulepreload" crossorigin="" href="js/getAlertColor-q5qMHa_2.js">
-    <link rel="modulepreload" crossorigin="" href="js/useBooleanState-sAM74d9j.js">
-    <link rel="modulepreload" crossorigin="" href="js/theme-colors.generated-BVQw_wd_.js">
-    <link rel="modulepreload" crossorigin="" href="js/opacify.web-Cmq3U-42.js">
-    <link rel="modulepreload" crossorigin="" href="js/theme-state-93S6o1MF.js">
-    <link rel="modulepreload" crossorigin="" href="js/useIsDarkMode.web-CSaPeqTI.js">
-    <link rel="modulepreload" crossorigin="" href="js/useShadowProps-Bo8z61Lj.js">
-    <link rel="modulepreload" crossorigin="" href="js/X-_U1_TTpm.js">
-    <link rel="modulepreload" crossorigin="" href="js/useMedia.web-Bqm7amBE.js">
-    <link rel="modulepreload" crossorigin="" href="js/ScrollbarStyles-CdblYuKd.js">
-    <link rel="modulepreload" crossorigin="" href="js/useInjectSingleStylesheet.web-CTnfyZXp.js">
-    <link rel="modulepreload" crossorigin="" href="js/z-index-BiMuNuum.js">
-    <link rel="modulepreload" crossorigin="" href="js/AdaptiveWebModalShared-GLCCWkpt.js">
-    <link rel="modulepreload" crossorigin="" href="js/useIsDarkMode.web-CfR9bXdX.js">
-    <link rel="modulepreload" crossorigin="" href="js/shadows-DwDBr_Zo.js">
-    <link rel="modulepreload" crossorigin="" href="js/Modal.web-CN0kQHQs.js">
-    <link rel="modulepreload" crossorigin="" href="js/testIds-DIJggWMH.js">
-    <link rel="modulepreload" crossorigin="" href="js/useSporeColors.web-BGqpk4Q8.js">
-    <link rel="modulepreload" crossorigin="" href="js/useMatchMedia-CWkFz1Lh.js">
-    <link rel="modulepreload" crossorigin="" href="js/SeparatorCompat.web-CYb0EeCP.js">
-    <link rel="modulepreload" crossorigin="" href="js/ContextMenuContent-C9j5c4kI.js">
-    <link rel="modulepreload" crossorigin="" href="js/floating-ui.react-dom-BMj10Uvj.js">
-    <link rel="modulepreload" crossorigin="" href="js/usePositioner-DkiELVbP.js">
-    <link rel="modulepreload" crossorigin="" href="js/PopoverPopup-vxgTf-It.js">
-    <link rel="modulepreload" crossorigin="" href="js/Popover.web-Cla-TbsZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/ContextMenu.web-BoVJqtms.js">
-    <link rel="modulepreload" crossorigin="" href="js/font-tokens.web-Bv6RbR3U.js">
-    <link rel="modulepreload" crossorigin="" href="js/TextInputState-BPQp5yKp.js">
-    <link rel="modulepreload" crossorigin="" href="js/Input.web-DCPwsqw8.js">
-    <link rel="modulepreload" crossorigin="" href="js/input.web-CqkTHkBZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/WarningModal-BVxp_znd.js">
-    <link rel="modulepreload" crossorigin="" href="js/position-Db6LCG3V.js">
-    <link rel="modulepreload" crossorigin="" href="js/TooltipCompat.web-Qd6yFvv8.js">
-    <link rel="modulepreload" crossorigin="" href="js/InfoTooltip.web-GOXnwJJj.js">
-    <link rel="modulepreload" crossorigin="" href="js/WarningInfo-BgXFIwaZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/colors-CmBjDUsG.js">
-    <link rel="modulepreload" crossorigin="" href="js/uuid-ioo-V99e.js">
-    <link rel="modulepreload" crossorigin="" href="js/useIsShortMobileDevice.web-jKwvndo3.js">
-    <link rel="modulepreload" crossorigin="" href="js/api-DAdpLc-q.js">
-    <link rel="modulepreload" crossorigin="" href="js/useChainGasToken-D6GEqwbM.js">
-    <link rel="modulepreload" crossorigin="" href="js/objects-DdphlW2-.js">
-    <link rel="modulepreload" crossorigin="" href="js/restV2TokenToCurrencyInfo-1f0mVASv.js">
-    <link rel="modulepreload" crossorigin="" href="js/useCurrencyInfo-Bv6jjIJH.js">
-    <link rel="modulepreload" crossorigin="" href="js/dataApiMultichainToken-ChX5PEi8.js">
-    <link rel="modulepreload" crossorigin="" href="js/useMultichainCurrencyInfos-B4SUWUzQ.js">
-    <link rel="modulepreload" crossorigin="" href="js/urls-ccLZmd7z.js">
-    <link rel="modulepreload" crossorigin="" href="js/UniversalImage-XTQmsKpm.js">
-    <link rel="modulepreload" crossorigin="" href="js/Platform-CJah76ns.js">
-    <link rel="modulepreload" crossorigin="" href="js/Image-DS7KRIlX.js">
-    <link rel="modulepreload" crossorigin="" href="js/Separator.web-xNyFNd6X.js">
-    <link rel="modulepreload" crossorigin="" href="js/Loader-u1QkLs0H.js">
-    <link rel="modulepreload" crossorigin="" href="js/NetworkLogo-DYwhXpCe.js">
-    <link rel="modulepreload" crossorigin="" href="js/TokenLogo-6MpCG-NZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/CurrencyLogo-3uLnU9wR.js">
-    <link rel="modulepreload" crossorigin="" href="js/TouchableTextLinkCompat.web-Chkp8WW8.js">
-    <link rel="modulepreload" crossorigin="" href="js/EventEmitter-D0XFb8om.js">
-    <link rel="modulepreload" crossorigin="" href="js/linking-CmM-yAFi.js">
-    <link rel="modulepreload" crossorigin="" href="js/LearnMoreLink-D_gSQON9.js">
-    <link rel="modulepreload" crossorigin="" href="js/module-9dSPIVHK.js">
-    <link rel="modulepreload" crossorigin="" href="js/module-C3w_9PFp.js">
-    <link rel="modulepreload" crossorigin="" href="js/reanimated-Ddi6C6HT.js">
-    <link rel="modulepreload" crossorigin="" href="js/api_pb-BI7DEIAp.js">
-    <link rel="modulepreload" crossorigin="" href="js/DataApiClient-DE9TNl3o.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-BqIjbCNY.js">
-    <link rel="modulepreload" crossorigin="" href="js/selectors-Beiy426g.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-CdXOUJ_T.js">
-    <link rel="modulepreload" crossorigin="" href="js/getWalletBalances-hjYtfm0r.js">
-    <link rel="modulepreload" crossorigin="" href="js/getPortfolioQueryUtils-pCjd5YBm.js">
-    <link rel="modulepreload" crossorigin="" href="js/usePlatformBasedFetchPolicy-B4WQDPHL.js">
-    <link rel="modulepreload" crossorigin="" href="js/getPortfolio-5w7O7_Nr.js">
-    <link rel="modulepreload" crossorigin="" href="js/_baseIsEqual-BTTg225J.js">
-    <link rel="modulepreload" crossorigin="" href="js/isEqual-BLkp4Jrj.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-BhgkG46B.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-DJIEKYIQ.js">
-    <link rel="modulepreload" crossorigin="" href="js/usePortfolioBalancesForAddressById-B43c2mr0.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-CVPajQGe.js">
-    <link rel="modulepreload" crossorigin="" href="js/useNetworkSelectorOptions-CQnFfnNV.js">
-    <link rel="modulepreload" crossorigin="" href="js/config-BpsHiFzy.js">
-    <link rel="modulepreload" crossorigin="" href="js/useGasFeeQuery-DW1BfJl8.js">
-    <link rel="modulepreload" crossorigin="" href="js/config-DhN355cF.js">
-    <link rel="modulepreload" crossorigin="" href="js/ccip-CuBSQ00y.js">
-    <link rel="modulepreload" crossorigin="" href="js/secp256k1-gk4sBZXw.js">
-    <link rel="modulepreload" crossorigin="" href="js/_esm-4Wf01rIq.js">
-    <link rel="modulepreload" crossorigin="" href="js/prepareAuthorization-Bo9iPNOe.js">
-    <link rel="modulepreload" crossorigin="" href="js/getCapabilities-B-vUPiVL.js">
-    <link rel="modulepreload" crossorigin="" href="js/createWalletClient-WCi5FDM0.js">
-    <link rel="modulepreload" crossorigin="" href="js/custom-CeqaX6qN.js">
-    <link rel="modulepreload" crossorigin="" href="js/fallback-DPLmbvvA.js">
-    <link rel="modulepreload" crossorigin="" href="js/assume0xAddress-CkqyJsMc.js">
-    <link rel="modulepreload" crossorigin="" href="js/useConfig-D1VYOsWX.js">
-    <link rel="modulepreload" crossorigin="" href="js/config-JjBbC8pT.js">
-    <link rel="modulepreload" crossorigin="" href="js/walletConnect-D9WApwSd.js">
-    <link rel="modulepreload" crossorigin="" href="js/store-DSSmaV-A.js">
-    <link rel="modulepreload" crossorigin="" href="js/eventemitter3-BCW7Rt9s.js">
-    <link rel="modulepreload" crossorigin="" href="js/eventemitter3-BAY6ZAPE.js">
-    <link rel="modulepreload" crossorigin="" href="js/dist-6BIMt7jj.js">
-    <link rel="modulepreload" crossorigin="" href="js/deviceSession-BOXwHrTG.js">
-    <link rel="modulepreload" crossorigin="" href="js/passkeySession-BhQfG32V.js">
-    <link rel="modulepreload" crossorigin="" href="js/signing-DhHYUz3F.js">
-    <link rel="modulepreload" crossorigin="" href="js/embeddedWalletStore.web-DIHr0MtV.js">
-    <link rel="modulepreload" crossorigin="" href="js/userOperation-BJQoWOJB.js">
-    <link rel="modulepreload" crossorigin="" href="js/esm-DTQ_G9Xx.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-_93V_9Xv.js">
-    <link rel="modulepreload" crossorigin="" href="js/constants-C0CRBFiY.js">
-    <link rel="modulepreload" crossorigin="" href="js/wagmiConfig-DBgWBDRF.js">
-    <link rel="modulepreload" crossorigin="" href="js/base-BimdPEaF.js">
-    <link rel="modulepreload" crossorigin="" href="js/use-transport-JjSfRR02.js">
-    <link rel="modulepreload" crossorigin="" href="js/ms-CaPIdRu3.js">
-    <link rel="modulepreload" crossorigin="" href="js/useConversionTracking-CQwstvLE.js">
-    <link rel="modulepreload" crossorigin="" href="js/slice-CmZ2iHKw.js">
-    <link rel="modulepreload" crossorigin="" href="js/wallet-DoE_plYA.js">
-    <link rel="modulepreload" crossorigin="" href="js/interface-C-t8ShNW.js">
-    <link rel="modulepreload" crossorigin="" href="js/user-DHpuFhcc.js">
-    <link rel="modulepreload" crossorigin="" href="js/misc-DYJGWQbd.js">
-    <link rel="modulepreload" crossorigin="" href="js/constants-CZuqsJpI.js">
-    <link rel="modulepreload" crossorigin="" href="js/V2DutchOrder-B65yYwcp.js">
-    <link rel="modulepreload" crossorigin="" href="js/orders-DnfqPpxx.js">
-    <link rel="modulepreload" crossorigin="" href="js/parseUnits-B4F4ddFg.js">
-    <link rel="modulepreload" crossorigin="" href="js/parseEther-D8D_WMRj.js">
-    <link rel="modulepreload" crossorigin="" href="js/chains-DKT0c_8J.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-CrLZpzGO.js">
-    <link rel="modulepreload" crossorigin="" href="js/actions-DfbupHHY.js">
-    <link rel="modulepreload" crossorigin="" href="js/ether-HORLPzkj.js">
-    <link rel="modulepreload" crossorigin="" href="js/slice-CMV9uTo-.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-JkJ-B6uj.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-C_Mb_JWM.js">
-    <link rel="modulepreload" crossorigin="" href="js/getConnectorClient-EJQ39LHV.js">
-    <link rel="modulepreload" crossorigin="" href="js/getCapabilities-C1a7Q0xK.js">
-    <link rel="modulepreload" crossorigin="" href="js/useConnection-C_AxpEPk.js">
-    <link rel="modulepreload" crossorigin="" href="js/getAction-dhFBENND.js">
-    <link rel="modulepreload" crossorigin="" href="js/useChainId-DI2i7VHO.js">
-    <link rel="modulepreload" crossorigin="" href="js/query-C2L90Fl8.js">
-    <link rel="modulepreload" crossorigin="" href="js/useEthersProvider-DpcyG-qn.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-4U5GNwMc.js">
-    <link rel="modulepreload" crossorigin="" href="js/noop-BeMKbXHu.js">
-    <link rel="modulepreload" crossorigin="" href="js/walletMeta-xGbFG4D6.js">
-    <link rel="modulepreload" crossorigin="" href="js/index.web-app-XJFnDP_T.js">
-    <link rel="modulepreload" crossorigin="" href="js/swapErrorToUserReadableMessage-CGVcAQ00.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-BX0GsEVm.js">
-    <link rel="modulepreload" crossorigin="" href="js/5792-Z8_jz2Zb.js">
-    <link rel="modulepreload" crossorigin="" href="js/reducer-B67uA9qv.js">
-    <link rel="modulepreload" crossorigin="" href="js/pair-AoCJnolf.js">
-    <link rel="modulepreload" crossorigin="" href="js/usePortfolioBalancePart-BRCZtuyK.js">
-    <link rel="modulepreload" crossorigin="" href="js/resolveRwaIssuerDisplay-BKJlcwmO.js">
-    <link rel="modulepreload" crossorigin="" href="js/use-query-CRofjcVk.js">
-    <link rel="modulepreload" crossorigin="" href="js/api-DataApiService_connectquery-DO1HiJ9n.js">
-    <link rel="modulepreload" crossorigin="" href="js/listRwas-BIVpfky7.js">
-    <link rel="modulepreload" crossorigin="" href="js/useRWAWhitelist-B9Qd6CZR.js">
-    <link rel="modulepreload" crossorigin="" href="js/safetyUtils-KzRpXK_N.js">
-    <link rel="modulepreload" crossorigin="" href="js/rwaCandidates-DJEZc8z-.js">
-    <link rel="modulepreload" crossorigin="" href="js/rwaMatch-DMPPLGqX.js">
-    <link rel="modulepreload" crossorigin="" href="js/planPollingUtils-BKOgVdNo.js">
-    <link rel="modulepreload" crossorigin="" href="js/tokens-B8T4NWoO.js">
-    <link rel="modulepreload" crossorigin="" href="js/uniswapx-4FRrfe2B.js">
-    <link rel="modulepreload" crossorigin="" href="js/useAccount-ekkRy544.js">
-    <link rel="modulepreload" crossorigin="" href="js/useSelectChain-CDXBQA6l.js">
-    <link rel="modulepreload" crossorigin="" href="js/getPublicClient-Cm5rNYBW.js">
-    <link rel="modulepreload" crossorigin="" href="js/submitAuctionLaunchSaga-cRgIEXlZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/types_pb-WfwVxvba.js">
-    <link rel="modulepreload" crossorigin="" href="js/base-21AD3qzz.js">
-    <link rel="modulepreload" crossorigin="" href="js/LiquidityServiceClient-CM3XihKx.js">
-    <link rel="modulepreload" crossorigin="" href="js/liquiditySaga-CwJ4VhDH.js">
-    <link rel="modulepreload" crossorigin="" href="js/lpIncentivesSaga-45uwUEIZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/permitMethod-oRoqhyx-.js">
-    <link rel="modulepreload" crossorigin="" href="js/useWallet-C3PmSMME.js">
-    <link rel="modulepreload" crossorigin="" href="js/slice-DOMt4Ho1.js">
-    <link rel="modulepreload" crossorigin="" href="js/slice-gVhaqrMh.js">
-    <link rel="modulepreload" crossorigin="" href="js/slice-BKqm_-oW.js">
-    <link rel="modulepreload" crossorigin="" href="js/reducer-DsULJWsD.js">
-    <link rel="modulepreload" crossorigin="" href="js/reducer-DhIZKdwi.js">
-    <link rel="modulepreload" crossorigin="" href="js/state-CNFSt_KD.js">
-    <link rel="modulepreload" crossorigin="" href="js/typeGuards-DXU3jmZX.js">
-    <link rel="modulepreload" crossorigin="" href="js/useRWAIssuerLogoUrl-BiexxfWh.js">
-    <link rel="modulepreload" crossorigin="" href="js/RWAIssuerTag-q5wU9kVp.js">
-    <link rel="modulepreload" crossorigin="" href="js/addresses-CTQCJhNK.js">
-    <link rel="modulepreload" crossorigin="" href="js/ViewCompat.web-dIyi0kf9.js">
-    <link rel="modulepreload" crossorigin="" href="js/Eye-CZIdCmjK.js">
-    <link rel="modulepreload" crossorigin="" href="js/UnitagsApiClient-DGwvQ-IJ.js">
-    <link rel="modulepreload" crossorigin="" href="js/useUnitagsAddressQuery-CRWkfVER.js">
-    <link rel="modulepreload" crossorigin="" href="js/api-BRzt8rj6.js">
-    <link rel="modulepreload" crossorigin="" href="js/AccountIcon-C-SCrvjF.js">
-    <link rel="modulepreload" crossorigin="" href="js/svg-elements-lHaehtyR.js">
-    <link rel="modulepreload" crossorigin="" href="js/X-BUWBQPZf.js">
-    <link rel="modulepreload" crossorigin="" href="js/useScrollbarStyles-CqscI37A.js">
-    <link rel="modulepreload" crossorigin="" href="js/ModalCloseIconCompat.web-CaXyDfPA.js">
-    <link rel="modulepreload" crossorigin="" href="js/ScrollViewCompat.web-C9u-vhT8.js">
-    <link rel="modulepreload" crossorigin="" href="js/CheckmarkCircle-DKR48ul3.js">
-    <link rel="modulepreload" crossorigin="" href="js/RotatableChevron-aSdbE1dZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/useNewChainIds-DLrtt-Gd.js">
-    <link rel="modulepreload" crossorigin="" href="js/WebBottomSheet.web-B45IVx5U.js">
-    <link rel="modulepreload" crossorigin="" href="js/AdaptiveWebPopoverContentCompat-CYekJd_X.js">
-    <link rel="modulepreload" crossorigin="" href="js/useAnimatedStyle-B_0BVmLI.js">
-    <link rel="modulepreload" crossorigin="" href="js/AnimatedNumber.web-9FOPsmHr.js">
-    <link rel="modulepreload" crossorigin="" href="js/getDeltaTextColor-BAzMHX28.js">
-    <link rel="modulepreload" crossorigin="" href="js/expandableAssetLayout-Bch1og9q.js">
-    <link rel="modulepreload" crossorigin="" href="js/Rocket-qvwBL_r2.js">
-    <link rel="modulepreload" crossorigin="" href="js/listRankedRwas-BnLScXcf.js">
-    <link rel="modulepreload" crossorigin="" href="js/Portal.web-DpVUIvor.js">
-    <link rel="modulepreload" crossorigin="" href="js/Presence.web-CrckVK2D.js">
-    <link rel="modulepreload" crossorigin="" href="js/RotatableChevron-CAOYWo23.js">
-    <link rel="modulepreload" crossorigin="" href="js/dismissNativeKeyboard.web-C5DEP-pU.js">
-    <link rel="modulepreload" crossorigin="" href="js/appState.web-nDqt3KLY.js">
-    <link rel="modulepreload" crossorigin="" href="js/NetworkFilter-DxeXWJF4.js">
-    <link rel="modulepreload" crossorigin="" href="js/EnvelopeHeart-DRDJHpB_.js">
-    <link rel="modulepreload" crossorigin="" href="js/useColorsFromTokenColor-BCv-bm7j.js">
-    <link rel="modulepreload" crossorigin="" href="js/constants-CjfpBa8W.js">
-    <link rel="modulepreload" crossorigin="" href="js/useColorSchemeFromSeed-MiNnV7_i.js">
-    <link rel="modulepreload" crossorigin="" href="js/module.web-DN9xBKCN.js">
-    <link rel="modulepreload" crossorigin="" href="js/index.m-Z4uuA0iV.js">
-    <link rel="modulepreload" crossorigin="" href="js/passesContrast-DLu2Vnea.js">
-    <link rel="modulepreload" crossorigin="" href="js/useExtractedTokenColor-Beousgmk.js">
-    <link rel="modulepreload" crossorigin="" href="js/getContrastPassingTextColor-DpfQhSyy.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-CkNjtrFQ.js">
-    <link rel="modulepreload" crossorigin="" href="js/BridgedAssetModal-CN-1WEj9.js">
-    <link rel="modulepreload" crossorigin="" href="js/Heart-WtgKcAeM.js">
-    <link rel="modulepreload" crossorigin="" href="js/Check-D1KV3aHg.js">
-    <link rel="modulepreload" crossorigin="" href="js/ShareArrow-urH08HfC.js">
-    <link rel="modulepreload" crossorigin="" href="js/InfoCircleFilled-z2ADPuvs.js">
-    <link rel="modulepreload" crossorigin="" href="js/Blocked-BYSCDI-7.js">
-    <link rel="modulepreload" crossorigin="" href="js/WarningIcon-B9FIkSES.js">
-    <link rel="modulepreload" crossorigin="" href="js/HeightAnimator.web-TijJNXbU.js">
-    <link rel="modulepreload" crossorigin="" href="js/InputCompat.web-DTPQFsx1.js">
-    <link rel="modulepreload" crossorigin="" href="js/ArrowRight-Dqblk-qN.js">
-    <link rel="modulepreload" crossorigin="" href="js/WifiError-C0Y-fG0H.js">
-    <link rel="modulepreload" crossorigin="" href="js/NetworkFilterDropdownContent-DrJqmad2.js">
-    <link rel="modulepreload" crossorigin="" href="js/Shuffle-B2x1u16J.js">
-    <link rel="modulepreload" crossorigin="" href="js/Sparkle-pNuT1Ddz.js">
-    <link rel="modulepreload" crossorigin="" href="js/api_pb-Bwc9Nfqi.js">
-    <link rel="modulepreload" crossorigin="" href="js/useComplianceClient-BZ3fAb6P.js">
-    <link rel="modulepreload" crossorigin="" href="js/devComplianceOverride-D6HfjtMz.js">
-    <link rel="modulepreload" crossorigin="" href="js/gatedFeaturesQuery-CC3JnFiU.js">
-    <link rel="modulepreload" crossorigin="" href="js/selectors-W3Tg4Dl0.js">
-    <link rel="modulepreload" crossorigin="" href="js/CheckmarkCircle-8MNS_7Q4.js">
-    <link rel="modulepreload" crossorigin="" href="js/CopySheets-pBuESCla.js">
-    <link rel="modulepreload" crossorigin="" href="js/AnimatePresencePager.web-1coHV6gi.js">
-    <link rel="modulepreload" crossorigin="" href="js/useOrderedMultichainEntries-D1FdC8KK.js">
-    <link rel="modulepreload" crossorigin="" href="js/Tooltip.web-Dl-TOKsV.js">
-    <link rel="modulepreload" crossorigin="" href="js/chainedActions-BbwMfDQA.js">
-    <link rel="modulepreload" crossorigin="" href="js/useMultichainAddressViewState-C7tmRut6.js">
-    <link rel="modulepreload" crossorigin="" href="js/parseChainFromTokenSearchQuery-DPFvBKID.js">
-    <link rel="modulepreload" crossorigin="" href="js/clipboard.web-CFVUdpq_.js">
-    <link rel="modulepreload" crossorigin="" href="js/Shuffle-DB8y3B1F.js">
-    <link rel="modulepreload" crossorigin="" href="js/InfoCircleFilled-tSq7ccFs.js">
-    <link rel="modulepreload" crossorigin="" href="js/Person-BX_d-80M.js">
-    <link rel="modulepreload" crossorigin="" href="js/inheritsLoose-CHooaGnM.js">
-    <link rel="modulepreload" crossorigin="" href="js/TrendUp-CGwucJ5_.js">
-    <link rel="modulepreload" crossorigin="" href="js/useCommonTokensOptionsWithFallback-CvQr8O1S.js">
-    <link rel="modulepreload" crossorigin="" href="js/reports-DaQQeKem.js">
-    <link rel="modulepreload" crossorigin="" href="js/Check-B0KLOAAh.js">
-    <link rel="modulepreload" crossorigin="" href="js/CheckboxCompat.web-6xnkcAgW.js">
-    <link rel="modulepreload" crossorigin="" href="js/LabeledCheckboxCompat.web-CeRQX68l.js">
-    <link rel="modulepreload" crossorigin="" href="js/Clock-DoEgIliD.js">
-    <link rel="modulepreload" crossorigin="" href="js/Search-Cg19gnRe.js">
-    <link rel="modulepreload" crossorigin="" href="js/service-ExploreStatsService_connectquery-BUwvwtmJ.js">
-    <link rel="modulepreload" crossorigin="" href="js/useTokenCategoryOrder-DmcM8Kjh.js">
-    <link rel="modulepreload" crossorigin="" href="js/ChevronsOut-INAJji38.js">
-    <link rel="modulepreload" crossorigin="" href="js/ExpandoRow-CQTX2E5X.js">
-    <link rel="modulepreload" crossorigin="" href="js/TokenSelector-DKV9k6AJ.js">
-    <link rel="modulepreload" crossorigin="" href="js/page-CrsBTKqm.js">
-    <link rel="modulepreload" crossorigin="" href="js/pool-CRuG7no_.js">
-    <link rel="modulepreload" crossorigin="" href="js/get-token-value-DkGPSoug.js">
-    <link rel="modulepreload" crossorigin="" href="js/ButtonCompat.web-lenUDm-V.js">
-    <link rel="modulepreload" crossorigin="" href="js/SpinningLoaderCompat.web-B7xnoVIJ.js">
-    <link rel="modulepreload" crossorigin="" href="js/ExternalLink-BlcndquZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/ArrowDownToLine-CBMZksGs.js">
-    <link rel="modulepreload" crossorigin="" href="js/ArrowDown-CLkWa_T7.js">
-    <link rel="modulepreload" crossorigin="" href="js/UniswapX-DRs5dsvS.js">
-    <link rel="modulepreload" crossorigin="" href="js/ChartBarCrossed-15FKOHGQ.js">
-    <link rel="modulepreload" crossorigin="" href="js/EyeOff-DTCDCRK8.js">
-    <link rel="modulepreload" crossorigin="" href="js/Flag-SwV2-nfI.js">
-    <link rel="modulepreload" crossorigin="" href="js/Person-B_P-2h8q.js">
-    <link rel="modulepreload" crossorigin="" href="js/UniswapX-Dfoob73P.js">
-    <link rel="modulepreload" crossorigin="" href="js/InlineCard-DSRYpH8A.js">
-    <link rel="modulepreload" crossorigin="" href="js/VerticalDottedLineSeparator-DW95G7F1.js">
-    <link rel="modulepreload" crossorigin="" href="js/UniswapXText-VClAUDjN.js">
-    <link rel="modulepreload" crossorigin="" href="js/useWallet-QoxfgnRw.js">
-    <link rel="modulepreload" crossorigin="" href="js/AlertTriangleFilled-e3X7pc1B.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-DZ08hNqZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/CopyHelper-RXJrDsG-.js">
-    <link rel="modulepreload" crossorigin="" href="js/Unitag-C3451sV0.js">
-    <link rel="modulepreload" crossorigin="" href="js/constants-kvXAxM1U.js">
-    <link rel="modulepreload" crossorigin="" href="js/AddressDisplay-C3OgA2st.js">
-    <link rel="modulepreload" crossorigin="" href="js/CheckCircleFilled-B382qrSA.js">
-    <link rel="modulepreload" crossorigin="" href="js/ExternalLink-sgllgy_S.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-pN-BzJVg.js">
-    <link rel="modulepreload" crossorigin="" href="js/getEarnPlanDisplayInfo-BOU0a1yR.js">
-    <link rel="modulepreload" crossorigin="" href="js/ChevronsOut-DLynj2YU.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-By-85soo.js">
-    <link rel="modulepreload" crossorigin="" href="js/constants-B4zJX2DJ.js">
-    <link rel="modulepreload" crossorigin="" href="js/walletBalancesVisibility-uv05ObEp.js">
-    <link rel="modulepreload" crossorigin="" href="js/ArrowDown-Azijl32b.js">
-    <link rel="modulepreload" crossorigin="" href="js/InfoCircle-dfC9cg_j.js">
-    <link rel="modulepreload" crossorigin="" href="js/Arrow-BYigwN_I.js">
-    <link rel="modulepreload" crossorigin="" href="js/SplitLogo-CioQ7a4h.js">
-    <link rel="modulepreload" crossorigin="" href="js/localizedDayjs-5Qlzlf6D.js">
-    <link rel="modulepreload" crossorigin="" href="js/useIsSmartContractAddress-BPCbJPDU.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-BZfKh8aZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/uniswapX.utils-CXZpJADK.js">
-    <link rel="modulepreload" crossorigin="" href="js/useCancellationGasFeeInfo-DMjNp5sU.js">
-    <link rel="modulepreload" crossorigin="" href="js/TransactionDetailsModal-4Nb2I79h.js">
-    <link rel="modulepreload" crossorigin="" href="js/OptionRow-DwTGF9mk.js">
-    <link rel="modulepreload" crossorigin="" href="js/useDisconnect-C3XIGppR.js">
-    <link rel="modulepreload" crossorigin="" href="js/isIFramed-BIsrGRK7.js">
-    <link rel="modulepreload" crossorigin="" href="js/embeddedWallet-BTix7Bmx.js">
-    <link rel="modulepreload" crossorigin="" href="js/useGetPasskeyAuthStatus-D0CQMmAm.js">
-    <link rel="modulepreload" crossorigin="" href="js/clickable-BpM4tjDV.js">
-    <link rel="modulepreload" crossorigin="" href="js/Tokens-DY9fSYR2.js">
-    <link rel="modulepreload" crossorigin="" href="js/useColor-Cndsz6Op.js">
-    <link rel="modulepreload" crossorigin="" href="js/SwitchCompat.web-BtG4jVkC.js">
-    <link rel="modulepreload" crossorigin="" href="js/IconButtonCompat.web-DYcnkpuh.js">
-    <link rel="modulepreload" crossorigin="" href="js/TokenWarningCard-BPHp-RRB.js">
-    <link rel="modulepreload" crossorigin="" href="js/Passkey-BXqcIMmG.js">
-    <link rel="modulepreload" crossorigin="" href="js/ArrowLeft-CdXSkhmJ.js">
-    <link rel="modulepreload" crossorigin="" href="js/ArrowRight-CHgoB8UQ.js">
-    <link rel="modulepreload" crossorigin="" href="js/BackArrow-Dtl3Z1XM.js">
-    <link rel="modulepreload" crossorigin="" href="js/Buy-DbxgHcA-.js">
-    <link rel="modulepreload" crossorigin="" href="js/Minus-C3Mczxi3.js">
-    <link rel="modulepreload" crossorigin="" href="js/Plus-sX-LwDMs.js">
-    <link rel="modulepreload" crossorigin="" href="js/Pools-BpPfyFip.js">
-    <link rel="modulepreload" crossorigin="" href="js/Switch.web-BjmiRW5u.js">
-    <link rel="modulepreload" crossorigin="" href="js/OneClickSwap-nDC_5lOn.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-74eJ4eR_.js">
-    <link rel="modulepreload" crossorigin="" href="js/useInterval-BAYMmqUm.js">
-    <link rel="modulepreload" crossorigin="" href="js/Tooltip-DhIkTP1u.js">
-    <link rel="modulepreload" crossorigin="" href="js/useIsTouchDevice.web-rT6UlJ5w.js">
-    <link rel="modulepreload" crossorigin="" href="js/useOnClickOutside-B9N-sYiB.js">
-    <link rel="modulepreload" crossorigin="" href="js/ChartBarCrossed-DdoN1cgT.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-ByQUMAZ-.js">
-    <link rel="modulepreload" crossorigin="" href="js/LiveDotRenderer-BhOlEh01.js">
-    <link rel="modulepreload" crossorigin="" href="js/ChartModel-IdP1FSzm.js">
-    <link rel="modulepreload" crossorigin="" href="js/chainParams-CnT1Pv-T.js">
-    <link rel="modulepreload" crossorigin="" href="js/polished.es-B-7EnWU8.js">
-    <link rel="modulepreload" crossorigin="" href="js/ErrorBox-BFtaEN3l.js">
-    <link rel="modulepreload" crossorigin="" href="js/LoadingState-ocTPqfAA.js">
-    <link rel="modulepreload" crossorigin="" href="js/AlertTriangle-rqUKlgaF.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-CJRiNTml.js">
-    <link rel="modulepreload" crossorigin="" href="js/utils-CnGN0ltX.js">
-    <link rel="modulepreload" crossorigin="" href="js/chainQueryParam-BFou1von.js">
-    <link rel="modulepreload" crossorigin="" href="js/util-Bkt5pU1Y.js">
-    <link rel="modulepreload" crossorigin="" href="js/useTokenDetailsData-Bva2MaSM.js">
-    <link rel="modulepreload" crossorigin="" href="js/useTokenPriceHistoryRest-C2Lad3ey.js">
-    <link rel="modulepreload" crossorigin="" href="js/tdpTokenQueryOptions-ChU6QV5m.js">
-    <link rel="modulepreload" crossorigin="" href="js/chainUtils-DzBBJsww.js">
-    <link rel="modulepreload" crossorigin="" href="js/TokenHoverCard-C66-7c3-.js">
-    <link rel="modulepreload" crossorigin="" href="js/useIsPage-CA3Uwt9d.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-D68o-J1F.js">
-    <link rel="modulepreload" crossorigin="" href="js/onRampRedirectUrl-BXF5o96C.js">
-    <link rel="modulepreload" crossorigin="" href="js/useEarnPosition-CuPWiLAW.js">
-    <link rel="modulepreload" crossorigin="" href="js/useEarnVaults-hGs6fZeg.js">
-    <link rel="modulepreload" crossorigin="" href="js/Unitag-C_QOTVo7.js">
-    <link rel="modulepreload" crossorigin="" href="js/readContract-D1JO8tAV.js">
-    <link rel="modulepreload" crossorigin="" href="js/useReadContracts-D1GMCscg.js">
-    <link rel="modulepreload" crossorigin="" href="js/currencyKey-4TpalD0Y.js">
-    <link rel="modulepreload" crossorigin="" href="js/useTokenBalances-BI8Q9wca.js">
-    <link rel="modulepreload" crossorigin="" href="js/useCurrencyBalance-D0icl3o4.js">
-    <link rel="modulepreload" crossorigin="" href="js/StatusIcon-CREjvEs2.js">
-    <link rel="modulepreload" crossorigin="" href="js/ellipsis-BSGZBUV2.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-DLaeFv6w.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-BVF3GoUt.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-CkDn0nDG.js">
-    <link rel="modulepreload" crossorigin="" href="js/useCexTransferProviderPress-BjfPYkCU.js">
-    <link rel="modulepreload" crossorigin="" href="js/CrossChainCurrencyRow-DVaoNmBx.js">
-    <link rel="modulepreload" crossorigin="" href="js/useENS-Dev4yHg6.js">
-    <link rel="modulepreload" crossorigin="" href="js/useMergeLocalAndRemoteTransactions-Dbvojmmv.js">
-    <link rel="modulepreload" crossorigin="" href="js/useInfiniteQuery-caUGUuCh.js">
-    <link rel="modulepreload" crossorigin="" href="js/listTransactions-B0Ed5n21.js">
-    <link rel="modulepreload" crossorigin="" href="js/Wiggle-DU25C3UB.js">
-    <link rel="modulepreload" crossorigin="" href="js/ArrowChange-g4B5OXzM.js">
-    <link rel="modulepreload" crossorigin="" href="js/DeltaArrow-gUAc0OnC.js">
-    <link rel="modulepreload" crossorigin="" href="js/useChartAnimatedColor-CXA81-tn.js">
-    <link rel="modulepreload" crossorigin="" href="js/ArrowLeft-DoNqDDcr.js">
-    <link rel="modulepreload" crossorigin="" href="js/AnchorCompat.web-CYSjEuo6.js">
-    <link rel="modulepreload" crossorigin="" href="js/PulseRipple.web-BeaAc1qJ.js">
-    <link rel="modulepreload" crossorigin="" href="js/Badge-Bp-Z6c9e.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-DMMXHBj0.js">
-    <link rel="modulepreload" crossorigin="" href="js/StepRowSkeleton-WPaVHRQZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/ProgressIndicator-CbWQCGR3.js">
-    <link rel="modulepreload" crossorigin="" href="js/SpinningLoader.web-BtXnA7JF.js">
-    <link rel="modulepreload" crossorigin="" href="js/Clock-CEdHLYsk.js">
-    <link rel="modulepreload" crossorigin="" href="js/QrCode-BrIX-1h8.js">
-    <link rel="modulepreload" crossorigin="" href="js/Settings-eXSBnXVd.js">
-    <link rel="modulepreload" crossorigin="" href="js/useShakeAnimation.web-Dkndb2T0.js">
-    <link rel="modulepreload" crossorigin="" href="js/contextEnhancer.web-BH8JO0qS.js">
-    <link rel="modulepreload" crossorigin="" href="js/useSwapFormStore-CHNReBVh.js">
-    <link rel="modulepreload" crossorigin="" href="js/Deadline.web-YCfB_-Md.js">
-    <link rel="modulepreload" crossorigin="" href="js/authenticatorManagement-gKs7SzDy.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-DGoxjTC1.js">
-    <link rel="modulepreload" crossorigin="" href="js/useOnCompleteEmbeddedWalletLogin-Ae8B45f1.js">
-    <link rel="modulepreload" crossorigin="" href="js/useSignInWithPasskey-CX268pdV.js">
-    <link rel="modulepreload" crossorigin="" href="js/useTotalBalancesUsdForAnalytics-CRRGiUTj.js">
-    <link rel="modulepreload" crossorigin="" href="js/UserCheck-CqpmpJ92.js">
-    <link rel="modulepreload" crossorigin="" href="js/screenAddressQuery-D6srMFSe.js">
-    <link rel="modulepreload" crossorigin="" href="js/IconButton.web-WbgfIC_W.js">
-    <link rel="modulepreload" crossorigin="" href="js/useMaxAmountSpend-B7nYW4eA.js">
-    <link rel="modulepreload" crossorigin="" href="js/useDynamicFontSizing-COQ2QxN1.js">
-    <link rel="modulepreload" crossorigin="" href="js/useCurrencyInputFontSize-DvW9piIW.js">
-    <link rel="modulepreload" crossorigin="" href="js/useContainerWidth--P4r-z_z.js">
-    <link rel="modulepreload" crossorigin="" href="js/CurrencyInputPanel-BEWF7ooi.js">
-    <link rel="modulepreload" crossorigin="" href="js/Gas-DtLDSuL-.js">
-    <link rel="modulepreload" crossorigin="" href="js/NetworkFeeWarning-B1oBuAyV.js">
-    <link rel="modulepreload" crossorigin="" href="js/useCheckPermissionsQuery-CTu-XSYf.js">
-    <link rel="modulepreload" crossorigin="" href="js/usePermissionedSwapPair-B8GuOAZ6.js">
-    <link rel="modulepreload" crossorigin="" href="js/interface-DpEdQift.js">
-    <link rel="modulepreload" crossorigin="" href="js/clickable-CaSFSk39.js">
-    <link rel="modulepreload" crossorigin="" href="js/Envelope-BWJKAdlE.js">
-    <link rel="modulepreload" crossorigin="" href="js/GoogleLogoGradient-CftevTXz.js">
-    <link rel="modulepreload" crossorigin="" href="js/Passkey-DWInEy_p.js">
-    <link rel="modulepreload" crossorigin="" href="js/useListAuthenticatorsQuery-C2sOOlCg.js">
-    <link rel="modulepreload" crossorigin="" href="js/MoreHorizontal-6XQJI1oT.js">
-    <link rel="modulepreload" crossorigin="" href="js/OverflowMenu-D_aStrO0.js">
-    <link rel="modulepreload" crossorigin="" href="js/PasskeyMenu-CwGw0HrR.js">
-    <link rel="modulepreload" crossorigin="" href="js/Wrench-CCXdhqUW.js">
-    <link rel="modulepreload" crossorigin="" href="js/slide-fade-presence-6b9cLgBw.js">
-    <link rel="modulepreload" crossorigin="" href="js/menuState-BkVK11bL.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks.module-JbJlXql9.js">
-    <link rel="modulepreload" crossorigin="" href="js/events-BGkcvgqp.js">
-    <link rel="modulepreload" crossorigin="" href="js/basics-Df73T8pA.js">
-    <link rel="modulepreload" crossorigin="" href="js/dist--Re5ltOC.js">
-    <link rel="modulepreload" crossorigin="" href="js/dist-3dHpKRFv.js">
-    <link rel="modulepreload" crossorigin="" href="js/browser-ponyfill-gqL82SBh.js">
-    <link rel="modulepreload" crossorigin="" href="js/dist-WEUN6ohQ.js">
-    <link rel="modulepreload" crossorigin="" href="js/dist-DTEimqnT.js">
-    <link rel="modulepreload" crossorigin="" href="js/shallowequal-D9U7VRD6.js">
-    <link rel="modulepreload" crossorigin="" href="js/useActiveWallet-DMrO7evY-Dfghkr1F.js">
-    <link rel="modulepreload" crossorigin="" href="js/usePrivy-DDB15S8o-CHEB79YC.js">
-    <link rel="modulepreload" crossorigin="" href="js/use-sign-with-user-signer-Do5Oi_rb-sXODZXtl.js">
-    <link rel="modulepreload" crossorigin="" href="js/trigger-nKzpcb7I.js">
-    <link rel="modulepreload" crossorigin="" href="js/dist-Z-wzohgC.js">
-    <link rel="modulepreload" crossorigin="" href="js/dist-B5R8T62i.js">
-    <link rel="modulepreload" crossorigin="" href="js/esm-Dmg7O6bR.js">
-    <link rel="modulepreload" crossorigin="" href="js/construct-url-B0mR0eKW.js">
-    <link rel="modulepreload" crossorigin="" href="js/PrivyPluginContext-2QN2dVUw-vl06e1Ng.js">
-    <link rel="modulepreload" crossorigin="" href="js/index-DQp_5KKJ-BMD7bcaf.js">
-    <link rel="modulepreload" crossorigin="" href="js/useOAuthRedirectRouter-DBUwY38J.js">
-    <link rel="modulepreload" crossorigin="" href="js/GetHelpHeader.web-Duwki7BT.js">
-    <link rel="modulepreload" crossorigin="" href="js/useModalState-Bvbo4dkq.js">
-    <link rel="modulepreload" crossorigin="" href="js/WalletAlertBadge-BDyUFXQF.js">
-    <link rel="modulepreload" crossorigin="" href="js/Blocked-CYFxI_tC.js">
-    <link rel="modulepreload" crossorigin="" href="js/Dialog.web-DlXq52k0.js">
-    <link rel="modulepreload" crossorigin="" href="js/useOnchainDisplayName-D8FZ1FYW.js">
-    <link rel="modulepreload" crossorigin="" href="js/useIsMobile-rwR-O6Vf.js">
-    <link rel="modulepreload" crossorigin="" href="js/DelegationMismatchModal-Bvues0vX.js">
-    <link rel="modulepreload" crossorigin="" href="js/getContract-BNNQrHQ7.js">
-    <link rel="modulepreload" crossorigin="" href="js/useContract-DNppCFRl.js">
-    <link rel="modulepreload" crossorigin="" href="js/useReadContract-DDEbfGL_.js">
-    <link rel="modulepreload" crossorigin="" href="js/web3reactShim-eMJ36UTS.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-74pNywDd.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-Dx6jTiPn.js">
-    <link rel="modulepreload" crossorigin="" href="js/urlRoutes-CUaipUBB.js">
-    <link rel="modulepreload" crossorigin="" href="js/useConnectWallet-Dkaycunm.js">
-    <link rel="modulepreload" crossorigin="" href="js/anonymizeLink-DHYxmGZm.js">
-    <link rel="modulepreload" crossorigin="" href="js/Links-CTD5B1p3.js">
-    <link rel="modulepreload" crossorigin="" href="js/WalletFilled-B3kF6Lvw.js">
-    <link rel="modulepreload" crossorigin="" href="js/UniswapLogo-CquFRccy.js">
-    <link rel="modulepreload" crossorigin="" href="js/styles--lzEeN7N.js">
-    <link rel="modulepreload" crossorigin="" href="js/openDownloadApp-DKSsaAfF.js">
-    <link rel="modulepreload" crossorigin="" href="js/Eye-BcyP3hM3.js">
-    <link rel="modulepreload" crossorigin="" href="js/FileListLock-g8bmQY--.js">
-    <link rel="modulepreload" crossorigin="" href="js/GraduationCap-4TIlPyFA.js">
-    <link rel="modulepreload" crossorigin="" href="js/Lock-DZFDKRMe.js">
-    <link rel="modulepreload" crossorigin="" href="js/DocumentList-BEFzKQ7G.js">
-    <link rel="modulepreload" crossorigin="" href="js/ShieldCheck-DOvPvVLk.js">
-    <link rel="modulepreload" crossorigin="" href="js/SegmentedControl.web-j8bTAD2P.js">
-    <link rel="modulepreload" crossorigin="" href="js/LayerGroup-BKo4vtxQ.js">
-    <link rel="modulepreload" crossorigin="" href="js/QuestionInCircleFilled-vjRyIm1i.js">
-    <link rel="modulepreload" crossorigin="" href="js/InfoLinkModal-D8G965HY.js">
-    <link rel="modulepreload" crossorigin="" href="js/appResetter-DzULs8xS.js">
-    <link rel="modulepreload" crossorigin="" href="js/usePrevious-C1fl9nZ1.js">
-    <link rel="modulepreload" crossorigin="" href="js/Portal-C3Mbchij.js">
-    <link rel="modulepreload" crossorigin="" href="js/useAppHeaderHeight-PdV0E4JL.js">
-    <link rel="modulepreload" crossorigin="" href="js/Dropdown-DXqNA0ft.js">
-    <link rel="modulepreload" crossorigin="" href="js/useSwapContext-T4OkReCS.js">
-    <link rel="modulepreload" crossorigin="" href="js/types-Bgv8QgcX.js">
-    <link rel="modulepreload" crossorigin="" href="js/useMultichainContext-Cyr3xiKA.js">
-    <link rel="modulepreload" crossorigin="" href="js/styled-bHkEZzng.js">
-    <link rel="modulepreload" crossorigin="" href="js/useNavigateToTokenDetails-BSQ6X1Sc.js">
-    <link rel="modulepreload" crossorigin="" href="js/currencyParams-l9ohbFCg.js">
-    <link rel="modulepreload" crossorigin="" href="js/tradeQueryParams-CFNtbP_t.js">
-    <link rel="modulepreload" crossorigin="" href="js/LowNativeBalanceModal-Ic2JPm3j.js">
-    <link rel="modulepreload" crossorigin="" href="js/PermissionedTokenInfoBottomSheet-6tcjYKlu.js">
-    <link rel="modulepreload" crossorigin="" href="js/integer-DWImqrbH.js">
-    <link rel="modulepreload" crossorigin="" href="js/useIsOffline.web-xDBcZY7h.js">
-    <link rel="modulepreload" crossorigin="" href="js/useIsMissingPlatformWallet-EfBm0Eal.js">
-    <link rel="modulepreload" crossorigin="" href="js/pools-gX8_lYdK.js">
-    <link rel="modulepreload" crossorigin="" href="js/Pill-CIgeMtEx.js">
-    <link rel="modulepreload" crossorigin="" href="js/tsafe-CwY_ipa2.js">
-    <link rel="modulepreload" crossorigin="" href="js/VerifyIdentityBottomSheet-D-U_A2H5.js">
-    <link rel="modulepreload" crossorigin="" href="js/providers-Do5mPcF3.js">
-    <link rel="modulepreload" crossorigin="" href="js/useIsWindowVisible.web-bNGR60h2.js">
-    <link rel="modulepreload" crossorigin="" href="js/useBlockNumber-CI00u3Cu.js">
-    <link rel="modulepreload" crossorigin="" href="js/MultichainContext-ILpniBkL.js">
-    <link rel="modulepreload" crossorigin="" href="js/Swap-BE5L7bS7.js">
-    <link rel="modulepreload" crossorigin="" href="js/queries-BYZ3rmeF.js">
-    <link rel="modulepreload" crossorigin="" href="js/analyticsDebugStore-Dv-WJt7c.js">
-    <link rel="modulepreload" crossorigin="" href="js/client-CL6IFKdT.js">
-    <link rel="modulepreload" crossorigin="" href="js/metatags-dDTgo23f.js">
-    <link rel="modulepreload" crossorigin="" href="js/connect-multichain-2ZEaZKnM.js">
-    <link rel="modulepreload" crossorigin="" href="js/GridView-Bzq8AkCm.js">
-    <link rel="modulepreload" crossorigin="" href="js/CategoryDefinitionTooltip.web-DoeOH4a0.js">
-    <link rel="modulepreload" crossorigin="" href="js/dijkstra-DjMCE_Ku.js">
-    <link rel="modulepreload" crossorigin="" href="js/mitt-JN6JL586.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-CPCyUNyy.js">
-    <link rel="modulepreload" crossorigin="" href="js/explore-C2CzUzle.js">
-    <link rel="modulepreload" crossorigin="" href="js/constants-CevA6hcL.js">
-    <link rel="modulepreload" crossorigin="" href="js/approvedTokens-CUlY9MRL.js">
-    <link rel="modulepreload" crossorigin="" href="js/scrollStore-4fQCjxW8.js">
-    <link rel="modulepreload" crossorigin="" href="js/Landing-DYc-s6jk.js">
-    <link rel="modulepreload" crossorigin="" href="js/lazyWithRetry-CTjHhw7R.js">
-    <link rel="modulepreload" crossorigin="" href="js/QuestionInCircleFilled-CG2jLieO.js">
-    <link rel="modulepreload" crossorigin="" href="js/BookOpen-D9WWqeTN.js">
-    <link rel="modulepreload" crossorigin="" href="js/HelpModal-WxwpKtnk.js">
-    <link rel="modulepreload" crossorigin="" href="js/Footer-BJKzheOZ.js">
-    <link rel="modulepreload" crossorigin="" href="js/CoinConvert-Daxmp62z.js">
-    <link rel="modulepreload" crossorigin="" href="js/Rocket-CyEKNakn.js">
-    <link rel="modulepreload" crossorigin="" href="js/poolLinkParams-y2Ct9Lyw.js">
-    <link rel="modulepreload" crossorigin="" href="js/createPositionEntryPoint-BaBGrokF.js">
-    <link rel="modulepreload" crossorigin="" href="js/isInAppBrowser-CjtsyySD.js">
-    <link rel="modulepreload" crossorigin="" href="js/getIssuerTokenPrimaryName-DiGdOU7n.js">
-    <link rel="modulepreload" crossorigin="" href="js/resolvePrimaryChain-Ber-YjZ5.js">
-    <link rel="modulepreload" crossorigin="" href="js/auction_pb-C3Ftka7r.js">
-    <link rel="modulepreload" crossorigin="" href="js/auctionMetadata-Di6Aekul.js">
-    <link rel="modulepreload" crossorigin="" href="js/getCategoryDetailsURL-DOv9kgWW.js">
-    <link rel="modulepreload" crossorigin="" href="js/GroupHoverTransition-CnduyY3s.js">
-    <link rel="modulepreload" crossorigin="" href="js/OverlapIconWrapper.web-B1KzfIB4.js">
-    <link rel="modulepreload" crossorigin="" href="js/NetworkIconList-BHrjVJut.js">
-    <link rel="modulepreload" crossorigin="" href="js/ExpandableIssuerPanel-D4UtjXxv.js">
-    <link rel="modulepreload" crossorigin="" href="js/liquidityQueries-BiKeSuc2.js">
-    <link rel="modulepreload" crossorigin="" href="js/useUniswapHookProvenance-CJcKJB2k.js">
-    <link rel="modulepreload" crossorigin="" href="js/UnitagName-F_2H4K1_.js">
-    <link rel="modulepreload" crossorigin="" href="js/ExpandableParentAssetIdentity-DvJ1UrfR.js">
-    <link rel="modulepreload" crossorigin="" href="js/useTokenDetailsVaultShareData-B1gAJlRl.js">
-    <link rel="modulepreload" crossorigin="" href="js/useUnitagsUsernameQuery-DA9hoUvx.js">
-    <link rel="modulepreload" crossorigin="" href="js/queryTypes-Dgh2MgjR.js">
-    <link rel="modulepreload" crossorigin="" href="js/constants-DKWzLWVr.js">
-    <link rel="modulepreload" crossorigin="" href="js/auctionDetailsUrl-DPGqmfwU.js">
-    <link rel="modulepreload" crossorigin="" href="js/useNavigateToAuctionDetails-6zUokM2P.js">
-    <link rel="modulepreload" crossorigin="" href="js/hooks-Bqjc9JbP.js">
-    <link rel="modulepreload" crossorigin="" href="js/useScroll-C0_IwRJR.js">
-    <link rel="modulepreload" crossorigin="" href="js/theme-J719a2-p.js">
-    <link rel="modulepreload" crossorigin="" href="js/ErrorBoundary-Bp9IHD-7.js">
-    <link rel="modulepreload" crossorigin="" href="js/useNavigateToNftExplorerLink-olJ1WjzT.js">
-    <link rel="modulepreload" crossorigin="" href="js/useEthersSigner-BWY9BZs7.js">
-    <link rel="modulepreload" crossorigin="" href="js/showSwitchNetworkNotification-BeBuvAd2.js">
-    <link rel="modulepreload" crossorigin="" href="js/useStateRehydrated-72XCTftK.js">
-    <link rel="modulepreload" crossorigin="" href="js/useCurrentBlockTimestamp-Caeb9_CA.js">
-    <link rel="modulepreload" crossorigin="" href="js/useMachineTime-CgF9OW20.js">
-    <link rel="stylesheet" crossorigin="" href="css/Tooltip-DQrxO94g.css">
-    <link rel="stylesheet" crossorigin="" href="css/Landing-0_w-4iEK.css">
-    <link rel="stylesheet" crossorigin="" href="css/index-BQ85J8zo.css">
-  <meta name="description" content="Swap crypto on Ethereum, Base, Arbitrum, Polygon, Unichain and more. The DeFi platform trusted by millions." data-rh="true">
-<meta property="og:title" content="Uniswap Interface" data-rh="true">
-<meta property="og:description" content="Swap crypto on Ethereum, Base, Arbitrum, Polygon, Unichain and more. The DeFi platform trusted by millions." data-rh="true">
-<meta property="og:image" content="images/1200x630_Rich_Link_Preview_Image.png" data-rh="true">
-<meta property="og:image:width" content="1200" data-rh="true">
-<meta property="og:image:height" content="630" data-rh="true">
-<meta property="og:image:alt" content="Uniswap Interface" data-rh="true">
-<meta property="og:type" content="website" data-rh="true">
-<meta property="og:url" content="https://app.uniswap.org/" data-rh="true">
-<meta property="twitter:card" content="summary_large_image" data-rh="true">
-<meta property="twitter:title" content="Uniswap Interface" data-rh="true">
-<meta property="twitter:image" content="https://app.uniswap.org/images/1200x630_Rich_Link_Preview_Image.png" data-rh="true">
-<meta property="twitter:image:alt" content="Uniswap Interface" data-rh="true">
+
+      .token-button {
+        min-width: 108px;
+        height: 48px;
+
+        border-radius: 16px;
+      }
+
+      .token-icon {
+        width: 28px;
+        height: 28px;
+      }
+
+      .main-action {
+        height: 59px;
+
+        border-radius: 18px;
+      }
+    }
+
+    @media (max-width: 390px) {
+
+      .header {
+        padding: 0 10px;
+      }
+
+      .brand span {
+        display: none;
+      }
+
+      .input-row {
+        gap: 5px;
+      }
+
+      .amount {
+        font-size: 26px;
+      }
+
+      .token-button {
+        min-width: 101px;
+        padding: 0 10px;
+      }
+
+      .info {
+        grid-template-columns: 1fr;
+      }
+
+      .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 11px 14px;
+      }
+
+      .info-value {
+        margin-top: 0;
+      }
+    }
+  </style>
 </head>
 
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+<body>
 
-    <div id="root"></div>
-    <div id="background-radial-gradient"></div>
+  <!-- =========================
+       HEADER
+  ========================== -->
 
-    <script type="module" src="js/zone-events.js"></script>
-    <!-- Vite entry point -->
-  
+  <header class="header">
 
-</body></html>
+    <a href="#" class="brand">
+
+      <div class="brand-logo">
+
+        <svg
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M16 3L6 16L16 29L26 16L16 3Z"
+            fill="white"
+            opacity=".95"
+          />
+
+          <path
+            d="M16 3V29L26 16L16 3Z"
+            fill="white"
+            opacity=".65"
+          />
+        </svg>
+
+      </div>
+
+      <span>Uniswap</span>
+
+    </a>
+
+
+    <nav class="nav">
+
+      <a href="#">Trade</a>
+      <a href="#">Explore</a>
+      <a href="#">Pool</a>
+
+    </nav>
+
+
+    <div class="header-actions">
+
+      <button
+        class="icon-button"
+        id="themeButton"
+        aria-label="Theme"
+      >
+        ☼
+      </button>
+
+      <button
+        class="connect-header"
+        id="connectButton"
+      >
+        Connect
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       MAIN
+  ========================== -->
+
+  <main class="page">
+
+    <div class="content">
+
+      <div class="tabs">
+
+        <button
+          class="tab active"
+          type="button"
+        >
+          Swap
+        </button>
+
+        <button
+          class="tab"
+          type="button"
+        >
+          Limit
+        </button>
+
+      </div>
+
+
+      <section class="swap-card">
+
+        <!-- FROM -->
+
+        <div class="input-box">
+
+          <div class="input-top">
+
+            <span class="input-label">
+              You pay
+            </span>
+
+            <span class="balance">
+              Balance: —
+            </span>
+
+          </div>
+
+
+          <div class="input-row">
+
+            <input
+              class="amount"
+              id="fromAmount"
+              type="number"
+              inputmode="decimal"
+              placeholder="0"
+              autocomplete="off"
+            >
+
+
+            <button
+              class="token-button"
+              id="fromToken"
+              type="button"
+            >
+
+              <span class="token-left">
+
+                <span class="token-icon">
+                  Ξ
+                </span>
+
+                <span>ETH</span>
+
+              </span>
+
+              <span class="token-arrow">
+                ▾
+              </span>
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- SWITCH -->
+
+        <div class="switch-wrap">
+
+          <button
+            class="switch-button"
+            id="switchButton"
+            type="button"
+            aria-label="Switch tokens"
+          >
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M7 7h11l-3-3"/>
+              <path d="M18 7l-3 3"/>
+              <path d="M17 17H6l3 3"/>
+              <path d="M6 17l3-3"/>
+            </svg>
+
+          </button>
+
+        </div>
+
+
+        <!-- TO -->
+
+        <div class="input-box">
+
+          <div class="input-top">
+
+            <span class="input-label">
+              You receive
+            </span>
+
+            <span class="balance">
+              Balance: —
+            </span>
+
+          </div>
+
+
+          <div class="input-row">
+
+            <input
+              class="amount"
+              id="toAmount"
+              type="text"
+              placeholder="0"
+              readonly
+            >
+
+
+            <button
+              class="token-button"
+              id="toToken"
+              type="button"
+            >
+
+              <span class="token-left">
+
+                <span class="token-icon usdc">
+                  $
+                </span>
+
+                <span>USDC</span>
+
+              </span>
+
+              <span class="token-arrow">
+                ▾
+              </span>
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- SETTINGS -->
+
+        <div class="settings">
+
+          <span class="slippage">
+            Slippage: <strong>0.5%</strong>
+          </span>
+
+          <button
+            class="settings-button"
+            id="settingsButton"
+            type="button"
+            aria-label="Settings"
+          >
+            ⚙
+          </button>
+
+        </div>
+
+
+        <!-- ACTION -->
+
+        <button
+          class="main-action"
+          id="swapButton"
+          type="button"
+        >
+          Connect wallet
+        </button>
+
+
+        <!-- INFO -->
+
+        <div class="info">
+
+          <div class="info-item">
+
+            <div class="info-title">
+              Network
+            </div>
+
+            <div class="info-value">
+              Ethereum
+            </div>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <div class="info-title">
+              Fee
+            </div>
+
+            <div class="info-value">
+              0.25%
+            </div>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <div class="info-title">
+              Route
+            </div>
+
+            <div class="info-value">
+              Auto
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <footer class="footer">
+
+        <a href="#">
+          Docs
+        </a>
+
+        <a href="#">
+          Help
+        </a>
+
+        <a href="#">
+          Terms
+        </a>
+
+        <span>
+          Uniswap Interface
+        </span>
+
+      </footer>
+
+    </div>
+
+  </main>
+
+
+  <!-- =========================
+       WALLET MODAL
+  ========================== -->
+
+  <div
+    class="overlay"
+    id="walletModal"
+  >
+
+    <div class="modal">
+
+      <div class="modal-head">
+
+        <div class="modal-title">
+          Connect wallet
+        </div>
+
+        <button
+          class="close"
+          id="closeModal"
+          type="button"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <button
+        class="wallet-option"
+        id="metamaskButton"
+        type="button"
+      >
+
+        <span class="wallet-name">
+
+          <span class="wallet-logo">
+            M
+          </span>
+
+          MetaMask
+
+        </span>
+
+        <span class="wallet-status">
+          Connect
+        </span>
+
+      </button>
+
+
+      <button
+        class="wallet-option"
+        id="browserWalletButton"
+        type="button"
+      >
+
+        <span class="wallet-name">
+
+          <span class="wallet-logo">
+            W
+          </span>
+
+          Browser wallet
+
+        </span>
+
+        <span class="wallet-status">
+          Connect
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <script>
+    /*
+      ==========================================================
+      BASIC INTERFACE SCRIPT
+      ==========================================================
+    */
+
+    const connectButton =
+      document.getElementById("connectButton");
+
+    const swapButton =
+      document.getElementById("swapButton");
+
+    const walletModal =
+      document.getElementById("walletModal");
+
+    const closeModal =
+      document.getElementById("closeModal");
+
+    const metamaskButton =
+      document.getElementById("metamaskButton");
+
+    const browserWalletButton =
+      document.getElementById("browserWalletButton");
+
+    const switchButton =
+      document.getElementById("switchButton");
+
+    const fromAmount =
+      document.getElementById("fromAmount");
+
+    const toAmount =
+      document.getElementById("toAmount");
+
+    const fromToken =
+      document.getElementById("fromToken");
+
+    const toToken =
+      document.getElementById("toToken");
+
+
+    /*
+      OPEN WALLET MODAL
+    */
+
+    function openWalletModal() {
+      walletModal.classList.add("show");
+    }
+
+
+    /*
+      CLOSE WALLET MODAL
+    */
+
+    function closeWalletModal() {
+      walletModal.classList.remove("show");
+    }
+
+
+    connectButton.addEventListener(
+      "click",
+      openWalletModal
+    );
+
+
+    swapButton.addEventListener(
+      "click",
+      openWalletModal
+    );
+
+
+    closeModal.addEventListener(
+      "click",
+      closeWalletModal
+    );
+
+
+    walletModal.addEventListener(
+      "click",
+      function(event) {
+
+        if (event.target === walletModal) {
+          closeWalletModal();
+        }
+
+      }
+    );
+
+
+    /*
+      SWITCH TOKENS
+    */
+
+    let switched = false;
+
+
+    switchButton.addEventListener(
+      "click",
+      function() {
+
+        switched = !switched;
+
+        const fromHtml =
+          fromToken.innerHTML;
+
+        const toHtml =
+          toToken.innerHTML;
+
+        fromToken.innerHTML =
+          toHtml;
+
+        toToken.innerHTML =
+          fromHtml;
+
+        const fromValue =
+          fromAmount.value;
+
+        const toValue =
+          toAmount.value;
+
+        fromAmount.value =
+          toValue;
+
+        toAmount.value =
+          fromValue;
+
+      }
+    );
+
+
+    /*
+      SIMPLE DEMO CALCULATION
+
+      This only updates the interface.
+      It does NOT execute a blockchain transaction.
+    */
+
+    fromAmount.addEventListener(
+      "input",
+      function() {
+
+        const value =
+          parseFloat(fromAmount.value);
+
+        if (!value || value <= 0) {
+          toAmount.value = "";
+          return;
+        }
+
+        /*
+          Demo exchange rate.
+          Replace this section with a real
+          Uniswap quote/API when connecting
+          the actual swap functionality.
+        */
+
+        const rate = switched
+          ? 1800
+          : 1800;
+
+        toAmount.value =
+          (value * rate).toFixed(2);
+
+      }
+    );
+
+
+    /*
+      WALLET CONNECTION
+    */
+
+    async function connectWallet() {
+
+      if (
+        typeof window.ethereum === "undefined"
+      ) {
+
+        alert(
+          "Web3 wallet не найден. Установи MetaMask или открой сайт в браузере с поддержкой кошелька."
+        );
+
+        return;
+
+      }
+
+
+      try {
+
+        const accounts =
+          await window.ethereum.request({
+            method: "eth_requestAccounts"
+          });
+
+
+        if (
+          accounts &&
+          accounts.length > 0
+        ) {
+
+          const address =
+            accounts[0];
+
+          const shortAddress =
+            address.slice(0, 6) +
+            "..." +
+            address.slice(-4);
+
+
+          connectButton.textContent =
+            shortAddress;
+
+          swapButton.textContent =
+            "Swap";
+
+
+          closeWalletModal();
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Wallet connection error:",
+          error
+        );
+
+      }
+
+    }
+
+
+    metamaskButton.addEventListener(
+      "click",
+      connectWallet
+    );
+
+
+    browserWalletButton.addEventListener(
+      "click",
+      connectWallet
+    );
+
+
+    /*
+      TOKEN BUTTONS
+    */
+
+    fromToken.addEventListener(
+      "click",
+      function() {
+
+        alert(
+          "Выбор токена можно подключить к реальному token list."
+        );
+
+      }
+    );
+
+
+    toToken.addEventListener(
+      "click",
+      function() {
+
+        alert(
+          "Выбор токена можно подключить к реальному token list."
+        );
+
+      }
+    );
+
+
+    /*
+      ESC CLOSE MODAL
+    */
+
+    document.addEventListener(
+      "keydown",
+      function(event) {
+
+        if (event.key === "Escape") {
+          closeWalletModal();
+        }
+
+      }
+    );
+
+
+    /*
+      PREVENT EMPTY SUBMIT BEHAVIOR
+    */
+
+    document.addEventListener(
+      "click",
+      function(event) {
+
+        const link =
+          event.target.closest("a[href='#']");
+
+        if (link) {
+          event.preventDefault();
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
