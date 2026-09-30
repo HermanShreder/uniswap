@@ -1,1 +1,0 @@
-import{s as a}from"./rolldown-runtime-Bpprpzce.js";import{t as e}from"./react-D7hXOYnT.js";var r=a(e()),v={dropdown:970,modalBackdrop:1040,modal:1060,popoverBackdrop:1065,popover:1070,tooltip:1080,overlay:100010,toast:100020},n=(0,r.createContext)(void 0);function i(o,t){return Math.max((o??0)+1,t)}function c(o){return i((0,r.useContext)(n),o)}export{c as i,v as n,i as r,n as t};

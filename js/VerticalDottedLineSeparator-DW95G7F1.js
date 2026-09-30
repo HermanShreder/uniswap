@@ -1,1 +1,0 @@
-import{t as o}from"./jsx-runtime-DXSXxcGM.js";import{d as n,g as s}from"./createIcon-Biqa7yHC.js";var e=o();function p({strokeWidth:r=2,strokeColor:a="gray",strokeDasharray:i}){const t=r/2;return(0,e.jsx)(s,{height:"100%",width:"100%",children:(0,e.jsx)(n,{x1:t,y1:t,x2:t,y2:"100%",stroke:a,strokeWidth:r,strokeLinecap:"round",strokeDasharray:i??`0 ${r*2}`})})}export{p as t};

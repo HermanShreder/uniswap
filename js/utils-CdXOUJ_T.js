@@ -1,1 +1,0 @@
-function s({poolId:e,tokenId:n,chainId:t}){return`${e}-${n}-${t}`}function u(e){const n=e.split("-");if(n.length<3)return null;const t=Number(n[n.length-1]);if(!Number.isFinite(t)||t<=0)return null;const i=n[n.length-2],r=i==="undefined"?void 0:i,o=n.slice(0,n.length-2).join("-");return o?{poolId:o,tokenId:r,chainId:t}:null}export{u as n,s as t};

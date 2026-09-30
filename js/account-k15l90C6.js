@@ -1,2 +1,0 @@
-import{qt as t}from"./getCallError-CZhyThxO.js";var e=class extends t{constructor({docsPath:o}={}){super(["Could not find an Account to execute with this Action.","Please provide an Account with the `account` argument on the Action, or by supplying an `account` to the Client."].join(`
-`),{docsPath:o,docsSlug:"account",name:"AccountNotFoundError"})}},u=class extends t{constructor({docsPath:o,metaMessages:n,type:r}){super(`Account type "${r}" is not supported.`,{docsPath:o,metaMessages:n,name:"AccountTypeNotSupportedError"})}};export{u as n,e as t};

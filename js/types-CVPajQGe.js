@@ -1,1 +1,0 @@
-var r=(function(l){return l.Token="Token",l.MultichainToken="MultichainToken",l.Pool="Pool",l.WalletByAddress="WalletByAddress",l.ENSAddress="ENSAddress",l.Unitag="Unitag",l.Rwa="Rwa",l.RwaCollection="RwaCollection",l.EarnVault="EarnVault",l.Auction="Auction",l.Category="Category",l})({});export{r as t};

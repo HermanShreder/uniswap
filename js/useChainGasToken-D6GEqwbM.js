@@ -1,1 +1,0 @@
-import{o as r}from"./chainInfo-D3Gra5tg.js";import{ot as t}from"./tokens-DId0cXKG.js";import{n as s}from"./api-DAdpLc-q.js";function f(n){return r(n).gasTokenOverride??t(n)}function C({chainId:n,accountAddress:a}){const o=f(n),{balance:e,isLoading:i}=s(a?o:void 0,a);return{gasToken:o,gasBalance:e,isLoading:i}}export{C as n,f as t};

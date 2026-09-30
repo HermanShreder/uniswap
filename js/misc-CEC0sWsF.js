@@ -1,1 +1,0 @@
-import{a as S,i as a}from"./time-DRugyzC6.js";var N=(function(s){return s[s.Slow=5*a]="Slow",s[s.Normal=a]="Normal",s[s.KindaFast=30*S]="KindaFast",s[s.Fast=15*S]="Fast",s[s.LightningMcQueen=6*S]="LightningMcQueen",s})({}),_=1e4,M="0x0000000000000000000000000000000000000000";export{N as n,M as r,_ as t};

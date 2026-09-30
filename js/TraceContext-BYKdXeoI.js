@@ -1,1 +1,0 @@
-import{s as o}from"./rolldown-runtime-Bpprpzce.js";import{t as a}from"./react-D7hXOYnT.js";var t=o(a()),n=(0,t.createContext)({});function m(e){const r=(0,t.useContext)(n);return(0,t.useMemo)(()=>({...r,...e}),[r,e])}export{m as n,n as t};

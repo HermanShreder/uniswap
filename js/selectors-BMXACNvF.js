@@ -1,1 +1,0 @@
-var t=e=>e.userSettings.hideSmallBalances,s=e=>e.userSettings.hideSpamTokens,a=e=>e.userSettings.hideReportedActivity??!0,n=e=>e.userSettings.currentLanguage,l=e=>e.userSettings.isTestnetModeEnabled??!1,r=e=>e.userSettings.enableCustomGasFeeEntry;export{t as a,a as i,r as n,s as o,l as r,n as t};

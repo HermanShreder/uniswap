@@ -1,1 +1,0 @@
-var t={cursor:"pointer","$platform-web":{textDecoration:"none",transitionDuration:"0.2s",textDecorationLine:"none"},hoverStyle:{opacity:.8},pressStyle:{opacity:.6},style:{transition:"100ms"}};export{t};

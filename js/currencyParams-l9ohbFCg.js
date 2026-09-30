@@ -1,1 +1,0 @@
-import{a as s}from"./addresses-B2CqG4CA.js";import{t as i}from"./tokens-B8T4NWoO.js";function n(t,r){if(typeof t=="string"){const e=s({address:t,platform:r,withEVMChecksum:!0});if(e)return e;if(t.toUpperCase()==="ETH")return"ETH";if(t==="NATIVE")return i}}export{n as t};

@@ -1,1 +1,0 @@
-import{t as a}from"./cache-BIPVTHfg.js";import{a as e,i}from"./time-DRugyzC6.js";var A={getAuction:t=>[a.AuctionApi,"getAuction",t],getLatestCheckpoint:t=>[a.AuctionApi,"getLatestCheckpoint",t]},n={REALTIME:2*e,FAST:15*e,MODERATE:30*e,SLOW:i};export{A as n,n as t};

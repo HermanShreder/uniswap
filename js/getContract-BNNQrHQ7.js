@@ -1,1 +1,0 @@
-import{u as n}from"./addresses-B2CqG4CA.js";import{Z as s,n as o,t as a}from"./lib.esm-DZQMYRpU.js";s();o();function _({address:t,ABI:r,provider:e,account:i}){if(!n(t)||t==="0x0000000000000000000000000000000000000000")throw Error(`Invalid 'address' parameter '${t}'.`);return new a(t,r,m(e,i))}function m(t,r){return r?t.getSigner(r).connectUnchecked():t}export{_ as t};
